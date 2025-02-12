@@ -12,7 +12,9 @@
 
 #ifndef LIBFT_H
 # define LIBFT_H
-
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
 # include <stdio.h>
 # include <stdarg.h>
 # include <stdint.h>
@@ -64,5 +66,6 @@ int		ft_print_unsigned(unsigned int n);
 int		ft_printf(const char *format, ...);
 char	*ft_uitoa(unsigned int n);
 long	ft_atol(const char *nptr);
+char	*get_next_line(int fd);
 
 #endif

@@ -1,4 +1,4 @@
-SRC =	minishell.c	get_next_line.c
+SRC =	minishell.c
 NAME = minishell
 OBJ = $(SRC:.c=.o)
 
