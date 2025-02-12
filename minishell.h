@@ -22,6 +22,4 @@ typedef struct s_mini
 	char	*str;
 }	t_mini;
 
-char	*get_next_line(int fd);
-
 #endif
