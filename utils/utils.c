@@ -6,11 +6,11 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 15:10:17 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/02/17 08:42:29 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/02/17 11:04:37 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	only_space(t_mini *mini)
 {

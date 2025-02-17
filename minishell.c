@@ -6,7 +6,7 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/02/17 08:48:53 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/02/17 11:05:44 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,10 @@ void	handle_command(t_mini *mini)
 		expanded_str = expand_variables(mini->str, mini->last_exit_status);
 		ft_echo(expanded_str);
 		free(expanded_str);
+	}
+	else if (ft_strncmp(mini->str, "cd", 2) == 0)
+	{
+		change_directory(mini);
 	}
 	else
 		is_command(mini);

@@ -6,7 +6,7 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/02/14 18:40:47 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/02/17 10:34:33 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,16 @@ char	**ft_split_all(const char *str);
 
 // echo //
 void	ft_echo(char *str);
-void print_words_with_spaces(char *str, int *i);
-int handle_n_option(char *str, int *i);
+void	print_words_with_spaces(char *str, int *i);
+int		handle_n_option(char *str, int *i);
+
+// cd //
+void	change_directory(t_mini *mini);
 
 char	*expand_exit_status(char *expanded, int *j, int last_exit_status);
 char	*expand_env_variable(char *str, int *i, char *expanded, int *j);
 char	*process_dollar_sign(char *str, int *i, char *expanded, int *j, int last_exit_status);
 char	*expand_variables(char *str, int last_exit_status);
-int	ft_varlen(char *str);
+int		ft_varlen(char *str);
 
 #endif
