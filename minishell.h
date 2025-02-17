@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/02/17 16:08:49 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/02/17 16:17:11 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,12 @@ typedef struct s_mini
 	char	**args;
 	int		last_exit_status;
 }	t_mini;
+
+typedef struct s_expand
+{
+	char	*expanded;
+	int		j;
+}	t_expand;
 
 int		only_space(t_mini *mini);
 int		is_space(char c);
@@ -47,10 +53,11 @@ void	change_directory(t_mini *mini);
 void	ft_exit(t_mini *mini);
 
 void	clean_exit(t_mini *mini, int i);
-char	*expand_exit_status(char *expanded, int *j, int last_exit_status);
-char	*expand_env_variable(char *str, int *i, char *expanded, int *j);
-char	*process_dollar_sign(char *str, int *i, char *expanded, int *j, int last_exit_status);
+
 char	*expand_variables(char *str, int last_exit_status);
+char	*process_dollar_sign(char *str, int *i, t_expand *exp, int last_exit_status);
+char	*expand_env_variable(char *str, int *i, t_expand *exp);
+char	*expand_exit_status(t_expand *exp, int last_exit_status);
 int		ft_varlen(char *str);
 
 #endif
