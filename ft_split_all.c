@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_all.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 18:19:32 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/02/17 08:37:29 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/02/17 14:51:53 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,40 +70,29 @@ static char	*extract_word(const char **str)
 	return (word);
 }
 
-static void	free_all(char **result, int i)
-{
-	while (i > 0)
-		free(result[--i]);
-	free(result);
-}
-
 char	**ft_split_all(const char *str)
 {
-	int		words;
+	int		count_word;
 	char	**result;
 	int		i;
 
 	if (!str)
 		return (NULL);
-	words = count_words(str);
-	result = (char **)malloc(sizeof(char *) * (words + 1));
+	count_word = count_words(str);
+	result = (char **)malloc(sizeof(char *) * (count_word + 1));
 	if (!result)
 		return (NULL);
 	i = 0;
-	while (*str && i < words)
+	while (*str && i < count_word)
 	{
 		while (is_space(*str))
 			str++;
 		if (*str)
 		{
 			result[i] = extract_word(&str);
-			if (!result[i])
-    			return (free_all(result, i), NULL);
 			i++;
 		}
-		else if (*str)
-			return (free_all(result, i), NULL);
 	}
-	result[i] = NULL;
+	result[i] = '\0';
 	return (result);
 }

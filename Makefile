@@ -3,7 +3,8 @@ SRC =	minishell.c \
 		ft_split_all.c \
 		builtin/ft_echo.c \
 		parsing/env.c \
-		builtin/ft_cd.c
+		builtin/ft_cd.c\
+		builtin/ft_exit.c
 
 NAME = minishell
 OBJ = $(SRC:.c=.o)

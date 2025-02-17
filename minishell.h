@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/02/17 10:34:33 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/02/17 16:08:49 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,10 @@ int		handle_n_option(char *str, int *i);
 // cd //
 void	change_directory(t_mini *mini);
 
+// exit //
+void	ft_exit(t_mini *mini);
+
+void	clean_exit(t_mini *mini, int i);
 char	*expand_exit_status(char *expanded, int *j, int last_exit_status);
 char	*expand_env_variable(char *str, int *i, char *expanded, int *j);
 char	*process_dollar_sign(char *str, int *i, char *expanded, int *j, int last_exit_status);

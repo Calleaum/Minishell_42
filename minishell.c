@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/02/17 13:46:33 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/02/17 16:07:41 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,24 +51,12 @@ void	is_command(t_mini *mini)
 
 void	handle_command(t_mini *mini)
 {
-	int		i;
 	char	*expanded_str;
 
 	if (only_space(mini))
 		return ;
 	else if (!(ft_strncmp(mini->str, "exit", 4)) && strlenus(mini->str) == 4)
-	{
-		if (count_words_skipall(mini->str) > 2)
-			clean_exit(mini, 1);
-		else if (isdigit_str(mini->str + 5))
-		{
-			i = ft_atoi(mini->str + 5);
-			clean_exit(mini, i);
-		}
-		else if (strlenws(mini->str) != ft_strlen(mini->str) - 1)
-			clean_exit(mini, 2);
-		clean_exit(mini, 0);
-	}
+		ft_exit(mini);
 	else if (ft_strncmp(mini->str, "echo", 4) == 0
 		&& (mini->str[4] == ' ' || mini->str[4] == '\0'))
 	{
@@ -96,8 +84,10 @@ int	main(int ac, char **av, char **env)
 		mini.str = readline("minishell$ ");
 		if (!mini.str)
 			break ;
+		add_history(mini.str);
 		mini.args = ft_split_all(mini.str);
 		handle_command(&mini);
 		free(mini.str);
+		free(mini.args);
 	}
 }

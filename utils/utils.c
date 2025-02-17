@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 15:10:17 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/02/17 11:04:37 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/02/17 15:58:32 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	only_space(t_mini *mini)
 	int	i;
 
 	i = 0;
-	while (mini->str[i] == ' ' || (mini->str[i] >= 9 && mini->str[i] <= 13))
+	while (is_space(mini->str[i]))
 		if (mini->str[i] == '\n' || mini->str[++i] == '\n')
 			return (1);
 	return (0);
@@ -50,9 +50,11 @@ int	isdigit_str(char *str)
 	int	i;
 
 	i = 0;
-	if (!str[i] || str[i] == '\n')
+	if (!str)
 		return (0);
-	while (str[i] != '\n' && !is_space(str[i]))
+	if (str[i] == '+' || str[i] == '-')
+		i++;
+	while (str[i])
 	{
 		if (!ft_isdigit(str[i]))
 			return (0);
