@@ -3,21 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/02/17 16:07:41 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/02/17 17:10:50 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	clean_exit(t_mini *mini, int i)
+void	clean(t_mini *mini)
 {
+	int	j;
+
 	if (mini->str)
 		free(mini->str);
 	if (mini->args)
+	{
+		j = 0;
+		while (mini->args[j])
+		{
+			free(mini->args[j]);
+			j++;
+		}
 		free(mini->args);
+	}
+}
+
+void	clean_exit(t_mini *mini, int i)
+{
+	clean(mini);
 	exit(i);
 }
 
@@ -65,9 +80,7 @@ void	handle_command(t_mini *mini)
 		free(expanded_str);
 	}
 	else if (ft_strncmp(mini->str, "cd", 2) == 0)
-	{
 		change_directory(mini);
-	}
 	else
 		is_command(mini);
 }
@@ -87,7 +100,6 @@ int	main(int ac, char **av, char **env)
 		add_history(mini.str);
 		mini.args = ft_split_all(mini.str);
 		handle_command(&mini);
-		free(mini.str);
-		free(mini.args);
+		clean(&mini);
 	}
 }

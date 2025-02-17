@@ -6,7 +6,7 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/02/17 16:17:11 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/02/17 16:53:03 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void	change_directory(t_mini *mini);
 void	ft_exit(t_mini *mini);
 
 void	clean_exit(t_mini *mini, int i);
+void	clean(t_mini *mini);
 
 char	*expand_variables(char *str, int last_exit_status);
 char	*process_dollar_sign(char *str, int *i, t_expand *exp, int last_exit_status);
