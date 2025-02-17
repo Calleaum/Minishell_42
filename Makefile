@@ -1,9 +1,10 @@
-SRC =	minishell.c
+SRC =	minishell.c	utils.c	ft_split_all.c ft_echo.c
 NAME = minishell
 OBJ = $(SRC:.c=.o)
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
+LDFLAGS = -lreadline
 LIBFT_DIR = ./libftFINAL
 LIBFT = $(LIBFT_DIR)/libft.a
 
@@ -11,7 +12,7 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	$(MAKE) -C $(LIBFT_DIR)
-	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME) $(LDFLAGS)
 
 clean:
 	rm -f $(OBJ) $(OBJ_B)

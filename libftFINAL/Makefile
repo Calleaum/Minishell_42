@@ -9,7 +9,7 @@ SRC =	ft_atoi.c		ft_bzero.c		ft_calloc.c		ft_isalnum.c		\
 		ft_tolower.c	ft_toupper.c	ft_printf.c		ft_print_char.c		\
 		ft_print_hex.c	ft_print_int.c	ft_print_str.c	ft_uitoa.c			\
 		ft_putstr.c		ft_print_unsigned.c	ft_print_pointer.c	ft_atol.c	\
-		get_next_line.c
+		get_next_line.c ft_strcpy.c
 
 NAME = libft.a
 OBJ = $(SRC:.c=.o)
