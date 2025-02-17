@@ -2,7 +2,7 @@ SRC =	minishell.c \
 		utils/utils.c \
 		ft_split_all.c \
 		builtin/ft_echo.c \
-		parsing/env_echo.c \
+		parsing/env.c \
 		builtin/ft_cd.c
 
 NAME = minishell
