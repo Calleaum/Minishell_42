@@ -6,7 +6,7 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/02/17 16:53:03 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/02/17 18:30:27 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ void	clean_exit(t_mini *mini, int i);
 void	clean(t_mini *mini);
 
 char	*expand_variables(char *str, int last_exit_status);
-char	*process_dollar_sign(char *str, int *i, t_expand *exp, int last_exit_status);
+size_t	calculate_expanded_size(char *str, int last_exit_status);
+size_t	handle_dollar(char *str, int *i, int last_exit_status);
 char	*expand_env_variable(char *str, int *i, t_expand *exp);
 char	*expand_exit_status(t_expand *exp, int last_exit_status);
 int		ft_varlen(char *str);

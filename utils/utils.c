@@ -6,7 +6,7 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 15:10:17 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/02/17 17:05:45 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/02/17 18:13:50 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ size_t	strlenus(char *str)
 
 size_t	strlenws(char *str)
 {
-		size_t	i;
+	size_t	i;
 
 	i = 0;
 	while (ft_isalpha(str[i]))

@@ -1,8 +1,10 @@
 SRC =	minishell.c \
+		utils/utils2.c \
 		utils/utils.c \
 		ft_split_all.c \
 		builtin/ft_echo.c \
 		parsing/env.c \
+		parsing/env2.c \
 		builtin/ft_cd.c\
 		builtin/ft_exit.c
 
