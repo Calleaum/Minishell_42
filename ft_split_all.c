@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_all.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 18:19:32 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/02/17 17:01:50 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/02/18 13:49:12 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,10 @@ static int	count_words(const char *str)
 	in_word = 0;
 	while (*str)
 	{
-		if (!is_space(*str))
+		if (!is_space(*str) && !in_word)
 		{
-			if (!in_word)
-			{
 				count++;
 				in_word = 1;
-			}
 		}
 		else
 			in_word = 0;
