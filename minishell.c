@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/02/18 10:44:56 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/02/18 12:13:14 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,6 @@ void	clean(t_mini *mini)
 		}
 		free(mini->args);
 	}
-}
-
-void	clean_exit(t_mini *mini, int i)
-{
-	clean(mini);
-	exit(i);
 }
 
 void	is_command(t_mini *mini)

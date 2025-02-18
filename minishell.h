@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/02/18 11:04:27 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/02/18 12:13:29 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ void	change_directory(t_mini *mini);
 // exit //
 
 void	ft_exit(t_mini *mini);
-void	clean_exit(t_mini *mini, int i);
 void	clean(t_mini *mini);
 
 // env //
