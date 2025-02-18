@@ -6,7 +6,7 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/02/18 09:37:30 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/02/18 11:04:27 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define MINISHELL_H
 # include "libftFINAL/libft.h"
 # include <unistd.h>
-# include <limits.h>
+# include <linux/limits.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <readline/readline.h>
