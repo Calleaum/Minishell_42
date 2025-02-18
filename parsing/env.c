@@ -6,13 +6,13 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 09:54:45 by calleaum          #+#    #+#             */
-/*   Updated: 2025/02/17 18:30:20 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/02/18 09:31:20 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static size_t	get_var_size(char *str, int *i)
+size_t	get_var_size(char *str, int *i)
 {
 	char	*var_name;
 	char	*env_value;
@@ -70,7 +70,7 @@ char	*expand_env_variable(char *str, int *i, t_expand *exp)
 	return (exp->expanded);
 }
 
-static char	*process_dollar_sign(char *str, int *i, t_expand *exp,
+char	*process_dollar_sign(char *str, int *i, t_expand *exp,
 		int last_exit_status)
 {
 	(*i)++;
