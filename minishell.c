@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/02/18 12:13:14 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/02/18 12:24:33 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	handle_command(t_mini *mini)
 
 	if (only_space(mini))
 		return ;
-	else if (!(ft_strncmp(mini->str, "exit", 4)) && strlenus(mini->str) == 4)
+	else if (!(ft_strncmp(mini->args[0], "exit", 4)) && ft_strlen(mini->args[0]) == 4)
 		ft_exit(mini);
 	else if (ft_strncmp(mini->str, "echo", 4) == 0
 		&& (mini->str[4] == ' ' || mini->str[4] == '\0'))
@@ -93,6 +93,11 @@ int	main(int ac, char **av, char **env)
 			break ;
 		add_history(mini.str);
 		mini.args = ft_split_all(mini.str);
+		if (!mini.args[0])
+		{
+			free(mini.args);
+			mini.args = ft_split_all("oui");
+		}
 		handle_command(&mini);
 		clean(&mini);
 	}
