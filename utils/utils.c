@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 15:10:17 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/02/17 18:13:50 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/02/18 12:25:34 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,6 @@ int	only_space(t_mini *mini)
 		if (mini->str[i] == '\n' || mini->str[++i] == '\n')
 			return (1);
 	return (0);
-}
-
-size_t	strlenus(char *str)
-{
-	size_t	i;
-
-	i = 0;
-	while (str[i] && !is_space(str[i]))
-		i++;
-	return (i);
 }
 
 size_t	strlenws(char *str)
