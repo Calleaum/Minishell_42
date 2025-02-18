@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/02/18 12:13:29 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/02/18 13:28:33 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,6 @@ typedef struct s_expand
 int		only_space(t_mini *mini);
 int		is_space(char c);
 int		isdigit_str(char *str);
-size_t	strlenus(char *str);
-size_t	strlenws(char *str);
-int		count_words_skipall(const char *s);
 char	**ft_split_all(const char *str);
 
 // echo //

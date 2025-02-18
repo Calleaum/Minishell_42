@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/02/18 12:24:33 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/02/18 13:27:21 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,34 +30,6 @@ void	clean(t_mini *mini)
 	}
 }
 
-void	is_command(t_mini *mini)
-{
-	int	i;
-	int	j;
-	int	k;
-
-	i = 0;
-	j = 0;
-	k = 0;
-	if (!mini->str || mini->str[0] == '\0')
-		return ;
-	while (mini->str[i] == ' ' || (mini->str[i] >= 9 && mini->str[i] <= 13))
-		i++;
-	k = i;
-	while (mini->str[i] && !(mini->str[i] == ' '
-			|| (mini->str[i] >= 9 && mini->str[i] <= 13)))
-	{
-		i++;
-		j++;
-	}
-	if (j > 0)
-	{
-		mini->tmpstr = ft_substr(mini->str, k, j);
-		printf("%s: command not found\n", mini->tmpstr);
-		free(mini->tmpstr);
-	}
-}
-
 void	handle_command(t_mini *mini)
 {
 	char	*expanded_str;
@@ -76,7 +48,7 @@ void	handle_command(t_mini *mini)
 	else if (ft_strncmp(mini->str, "cd", 2) == 0)
 		change_directory(mini);
 	else
-		is_command(mini);
+		printf("%s: command not found\n", mini->args[0]);
 }
 
 int	main(int ac, char **av, char **env)
@@ -96,7 +68,7 @@ int	main(int ac, char **av, char **env)
 		if (!mini.args[0])
 		{
 			free(mini.args);
-			mini.args = ft_split_all("oui");
+			mini.args = ft_split_all("a");
 		}
 		handle_command(&mini);
 		clean(&mini);
