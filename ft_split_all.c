@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 18:19:32 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/02/18 13:56:21 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/02/19 13:14:13 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,65 +17,73 @@ int	is_space(char c)
 	return ((c == ' ' || (c >= 9 && c <= 13)));
 }
 
-static int	count_words(const char *str)
+static int	count_words(const char *str, t_split *split)
 {
-	int	count;
-	int	in_word;
-
-	count = 0;
-	in_word = 0;
+	split->count = 0;
+	split->in_word = 0;
+	split->in_quote = 0;
 	while (*str)
 	{
-		if (!is_space(*str) && !in_word)
+		if (*str == '"' || *str == '\'')
 		{
-				count++;
-				in_word = 1;
+			split->in_quote = !split->in_quote;
+			if (!split->in_word)
+			{
+				split->count++;
+				split->in_word = 1;
+			}
+		}
+		else if ((!is_space(*str) || split->in_quote) && !split->in_word)
+		{
+			split->count++;
+			split->in_word = 1;
 		}
 		else
-			in_word = 0;
+			split->in_word = 0;
 		str++;
 	}
-	return (count);
+	return (split->count);
 }
 
-static char	*extract_word(const char **str)
+static char	*extract_word(const char **str, t_split *split)
 {
-	const char	*start;
 	char		*word;
-	int			length;
-	int			i;
 
-	length = 0;
+	split->length = 0;
+	split->in_quote = 0;
+	split->i = 0;
 	while (is_space(**str))
 		(*str)++;
-	start = *str;
-	while (**str && !is_space(**str))
+	split->start = *str;
+	while (**str && (!is_space(**str) || split->in_quote))
 	{
-		length++;
+		if (**str == '"' || **str == '\'')
+			split->in_quote = !split->in_quote;
+		split->length++;
 		(*str)++;
 	}
-	word = (char *)malloc(length + 1);
+	word = (char *)malloc(split->length + 1);
 	if (!word)
 		return (NULL);
-	i = 0;
-	while (i < length)
+	while (split->i < split->length)
 	{
-		word[i] = start[i];
-		i++;
+		word[split->i] = split->start[split->i];
+		split->i++;
 	}
-	word[length] = '\0';
+	word[split->length] = '\0';
 	return (word);
 }
 
 char	**ft_split_all(const char *str)
 {
+	t_split	split;
 	int		count_word;
 	char	**result;
 	int		i;
 
 	if (!str)
 		return (NULL);
-	count_word = count_words(str);
+	count_word = count_words(str, &split);
 	result = (char **)malloc(sizeof(char *) * (count_word + 1));
 	if (!result)
 		return (NULL);
@@ -86,10 +94,10 @@ char	**ft_split_all(const char *str)
 			str++;
 		if (*str)
 		{
-			result[i] = extract_word(&str);
+			result[i] = extract_word(&str, &split);
 			i++;
 		}
 	}
-	result[i] = '\0';
+	result[i] = NULL;
 	return (result);
 }
