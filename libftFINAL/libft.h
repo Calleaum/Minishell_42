@@ -22,6 +22,7 @@
 # include <stddef.h>
 # include <stdlib.h>
 
+int		ft_strcmp(char *s1, char *s2);
 int		ft_atoi(const char *nptr);
 void	ft_bzero(void *s, size_t n);
 void	*ft_calloc(size_t nmemb, size_t size);
@@ -65,6 +66,13 @@ int		ft_print_pointer(void *ptr);
 int		ft_print_str(char *str);
 int		ft_print_unsigned(unsigned int n);
 int		ft_printf(const char *format, ...);
+int		fd_print_char(int fd, char c);
+int		fd_print_hex(int fd, unsigned int num, int uppercase);
+int		fd_print_int(int fd, int n);
+int		fd_print_pointer(int fd, void *ptr);
+int		fd_print_str(int fd, char *str);
+int		fd_print_unsigned(int fd, unsigned int n);
+int		fd_printf(int fd, const char *format, ...);
 char	*ft_uitoa(unsigned int n);
 long	ft_atol(const char *nptr);
 char	*get_next_line(int fd);

@@ -1,12 +1,28 @@
 SRC =	minishell.c \
-		utils/utils2.c \
-		utils/utils.c \
-		ft_split_all.c \
-		builtin/ft_echo.c \
-		parsing/env.c \
-		parsing/env2.c \
 		builtin/ft_cd.c\
-		builtin/ft_exit.c
+		builtin/ft_ctrl.c \
+		builtin/ft_echo.c \
+		builtin/ft_env.c \
+		builtin/ft_exit.c \
+		builtin/ft_export.c \
+		builtin/ft_pwd.c \
+		builtin/ft_unset.c \
+		ft_split_all.c \
+		parsing/list_utils.c \
+		parsing/list_utils2.c \
+		parsing/list.c \
+		env/dollar.c \
+		env/env_export.c \
+		env/env_export2.c \
+		env/env.c \
+		env/expand_env.c \
+		env/update_env.c \
+		utils/utils.c \
+		utils/utils2.c \
+		utils/unset/utils_unset.c \
+		utils/cd/utils_cd.c \
+		utils/export/utils_export.c \
+		free.c
 
 NAME = minishell
 OBJ = $(SRC:.c=.o)

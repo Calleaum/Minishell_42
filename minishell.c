@@ -3,74 +3,91 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/02/18 13:50:39 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/03/19 12:29:10 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	clean(t_mini *mini)
+void	handle_command(t_mini *mini, t_node *list)
 {
-	int	j;
-
-	if (mini->str)
-		free(mini->str);
-	if (mini->args)
-	{
-		j = 0;
-		while (mini->args[j])
-		{
-			free(mini->args[j]);
-			j++;
-		}
-		free(mini->args);
-	}
+	if (!(ft_strncmp(list->data, "exit", INT_MAX)))
+		ft_exit(mini, list);
+	else if (!ft_strncmp(list->data, "echo", INT_MAX))
+		ft_echo(list->next);
+	else if (!ft_strncmp(list->data, "cd", INT_MAX))
+		ft_cd(mini, list);
+	else if (!ft_strncmp(list->data, "pwd", INT_MAX))
+		ft_pwd(mini);
+	else if (!ft_strncmp(list->data, "env", INT_MAX))
+		ft_env(mini, list);
+	else if (!ft_strncmp(list->data, "export", INT_MAX))
+		ft_export(mini->env, list);
+	else if (!ft_strncmp(list->data, "unset", INT_MAX))
+		ft_unset(mini->env, list, mini);
+	else
+		if (list == NULL)
+			printf("Token: , $ in single quote: 0\n");
+		else
+			printf("%s: command not found\n", list->data);
 }
 
-void	handle_command(t_mini *mini)
+int	empty_line(char *line)
 {
-	char	*expanded_str;
+	int	i;
 
-	if (only_space(mini))
-		return ;
-	else if (!(ft_strncmp(mini->args[0], "exit", 4)) && ft_strlen(mini->args[0]) == 4)
-		ft_exit(mini);
-	else if (ft_strncmp(mini->str, "echo", 4) == 0
-		&& (mini->str[4] == ' ' || mini->str[4] == '\0'))
+	i = 0;
+	while (line[i] && ft_isspace(line[i]))
+		i++;
+	if (i == (int)ft_strlen(line))
 	{
-		expanded_str = expand_variables(mini->str, mini->last_exit_status);
-		ft_echo(expanded_str);
-		free(expanded_str);
+		free(line);
+		return (1);
 	}
-	else if (ft_strncmp(mini->str, "cd", 2) == 0)
-		change_directory(mini);
-	else
-		printf("%s: command not found\n", mini->args[0]);
+	return (0);
 }
 
 int	main(int ac, char **av, char **env)
 {
 	t_mini	mini;
+	t_node *list = NULL;
 
+	setup_signals();
 	mini.last_exit_status = 0;
+	init_mini(&mini, env);
 	if (ac != 1 && av && env)
 		return (printf("No arguments needed\n"), 1);
 	while (1)
 	{
 		mini.str = readline("minishell$ ");
 		if (!mini.str)
-			break ;
-		add_history(mini.str);
-		mini.args = ft_split_all(mini.str);
-		if (!mini.args[0])
 		{
-			free(mini.args);
-			mini.args = ft_split_all("a");
+			free(mini.str);
+			free_env(mini.env);
+			break ;
 		}
-		handle_command(&mini);
-		clean(&mini);
+		if (empty_line(mini.str))
+			continue ;
+		add_history(mini.str);
+		if (count_words(mini.str, &mini) == (size_t)-1)
+		{
+			free(mini.str);
+			continue ;
+		}
+		char *oui = expand_variables(mini.str, mini.last_exit_status, mini.env);
+		if (*oui == '\0')
+		{
+			free(oui);
+			free(mini.str);
+			continue;
+		}
+		list = tokenize_input(oui, &mini);
+		free(oui);
+		handle_command(&mini, list);
+		free_list(list);
+		free(mini.str);
 	}
 }

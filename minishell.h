@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/02/18 13:28:33 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/03/19 12:26:58 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,91 +15,152 @@
 # include "libftFINAL/libft.h"
 # include <unistd.h>
 # include <linux/limits.h>
+# include <limits.h>
 # include <stdio.h>
+# include <signal.h>
+# include <errno.h>
 # include <stdlib.h>
+# include <stdbool.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+
+typedef struct s_node
+{
+	char			*data;
+	int				type;
+	struct s_node	*next;
+}	t_node;
+
+typedef struct s_env_node
+{
+	char				*var;
+	struct s_env_node	*next;
+}	t_env_node;
+
+typedef struct s_env
+{
+	char	**env_vars;
+	int		count;
+	int		last_exit_status;
+	t_node	*tokens;
+}	t_env;
 
 typedef struct s_mini
 {
 	char	*str;
 	char	*tmpstr;
-	char	**args;
+	// char	**args;
 	int		last_exit_status;
+	int		i;
+	char	*current_token;
+	char	*quoted_part;
+	size_t	count;
+	int		in_word;
+	char	quote;
+	t_env	*env;
 }	t_mini;
 
 typedef struct s_expand
 {
 	char	*expanded;
+	int		i;
 	int		j;
+	int		sq;
+	int		dq;
+	char	quote;
+	int		in_quote;
 }	t_expand;
 
-int		only_space(t_mini *mini);
-int		is_space(char c);
-int		isdigit_str(char *str);
-char	**ft_split_all(const char *str);
+// Token types
+# define INPUT_FILE 1
+# define HEREDOC 2
+# define OUTPUT_TRUNC 3
+# define OUTPUT_APPEND 4
+# define PIPE 5
+# define CMD 6
+# define ARG 7
+
+// list //
+void		init_tokenization(t_node **head, t_mini *n);
+int			init_new_token(char **current_token, char c);
+t_node		*create_token(char *value, int type);
+void		add_token(t_node **head, t_node *new_token);
+void		free_list(t_node *head);
+
+int			get_token_type(char *word);
+char		*process_quoted_section(char *input, int *i, char quote_char);
+int			append_to_token(char **current_token, char c);
+void		handle_special_char(t_node **head, char *input, int *i);
+
+t_node		*tokenize_input(char *input, t_mini *n);
+void		display_tokens(t_node *head);
+
+// ft_split_all //
+int			only_space(t_mini *mini);
+int			ft_isspace(char c);
+int			isdigit_str(char *str);
+char		**ft_split_all(const char *s);
+size_t		count_words(const char *s, t_mini *split);
+
+// ctrl //
+void		setup_signals(void);
 
 // echo //
-
-void	ft_echo(char *str);
-void	print_words_with_spaces(char *str, int *i);
-int		handle_n_option(char *str, int *i);
+void		ft_echo(t_node *args);
 
 // cd //
-
-/// @brief Changes the current directory and updates PWD
-/// @param mini Structure containing the minishell information
-void	change_directory(t_mini *mini);
+int			ft_cd(t_mini *mini, t_node *list);
+int			handle_cd_error(char *path);
 
 // exit //
+void		ft_exit(t_mini *mini, t_node *list);
+void		clean(t_mini *mini);
+void		free_listenv(t_mini *mini, t_node *list);
 
-void	ft_exit(t_mini *mini);
-void	clean(t_mini *mini);
+// pwd //
+int			ft_pwd(t_mini *mini);
+int			update_pwd(t_env *env);
+
+// unset //
+int			ft_unset(t_env *env, t_node *list, t_mini *mini);
+int			check_env_match(char *env_var, const char *var_name);
+int			check_token_match(char *token_data, const char *var_name);
 
 // env //
+int			ft_env(t_mini *mini, t_node *args);
+char		*expand_variables(char *str, int last_exit_status, t_env *env);
+char		*expand_exit_status(t_expand *exp, int last_exit_status);
+size_t		calc_exp_siz(char *str, int last_exit_status, t_env *env);
+int			add_env_value(t_env *env, const char *name, const char *value);
+int			init_shell_vars(t_env *env);
+char		*process_dollar_sign(char *str, int *i, t_expand *exp, t_env *env);
+char		*expand_env_variable(char *str, int *i, t_expand *exp, t_env *env);
+char		*expand_env_variable(char *str, int *i, t_expand *exp, t_env *env);
+char		*get_env_value(t_env *env, const char *name);
+int			set_env_value(t_env *env, const char *name, const char *value);
+size_t		handle_dollar(char *str, int *i, int last_exit_status, t_env *env);
 
-/// @brief Processes a dollar sign encountered during expansion
-/// @param str The string to analyze
-/// @param i Pointer to the index in the string, will be updated
-/// @param exp Structure containing the result string and its current index
-/// @param last_exit_status The exit code of the last command
-/// @return Pointer to the updated result string
-char	*process_dollar_sign(char *str, int *i, t_expand *exp, int last_exit_status);
-/// @brief Gets the size of an environment variable
-/// @param str The string containing the variable name starting at index i
-/// @param i Pointer to the index in the string, will be updated to point after the variable name
-/// @return The size of the environment variable's value, or 0 if not found
-size_t	get_var_size(char *str, int *i);
-/// @brief Main function that expands all variables in a string
-/// @param str The string to analyze
-/// @param last_exit_status The exit code of the last command
-/// @return A new string with all variables expanded, or NULL if error
-char	*expand_variables(char *str, int last_exit_status);
-/// @brief Calculates the total size needed after expansion
-/// @param str The string to analyze
-/// @param last_exit_status The exit code of the last command
-/// @return The total calculated size, plus 1 for the final null character
-size_t	calculate_expanded_size(char *str, int last_exit_status);
-/// @brief Handles the expansion of a dollar sign found in a string
-/// @param str The string containing the '$' character
-/// @param i Pointer to the index in the string, will be updated
-/// @param last_exit_status The exit code of the last executed command
-/// @return The size the variable will take once expanded
-size_t	handle_dollar(char *str, int *i, int last_exit_status);
-/// @brief Expands an environment variable into the result string
-/// @param str The string containing the variable name
-/// @param i Pointer to the index in the string, will be updated
-/// @param exp Structure containing the result string and its current index
-/// @return  new string with all variables expanded, or NULL if error
-char	*expand_env_variable(char *str, int *i, t_expand *exp);
-/// @brief Expands the exit code ($?) into the result string
-/// @param exp Structure containing the result string and its current index
-/// @param last_exit_status The exit code of the last command
-/// @return Pointer to the updated result string
-char	*expand_exit_status(t_expand *exp, int last_exit_status);
-/// @brief Calculates the length of a variable name in a string
-/// @param str The string containing the variable name
-/// @return The length of the variable name
-int		ft_varlen(char *str);
+// env utils //
+char		*ft_strjoin3(const char *s1, const char *s2, const char *s3);
+char		*ft_strcpy2(char *dest, const char *src);
+void		free_env(t_env *env);
+t_env		*init_env(char **envp);
+
+//export//
+int			ft_export(t_env *env, t_node *list);
+int			add_env_var_no_value(t_env *env, const char *name);
+char		*str_n_copy(char *dest, const char *src, int n);
+int			is_valid_first_char(char c);
+int			is_valid_subsequent_char(char c);
+int			validate_var_name(char *arg, int name_len);
+int			handle_export_arg(t_env *env, char *arg);
+int			update_or_add_env_var(t_env *env, const char *var);
+int			var_exists(t_env *env, char *arg);
+void		free_env_list(t_env_node *head);
+t_env_node	*build_sorted_env_list(t_env *env);
+
+// utils //
+void		init_mini(t_mini *mini, char **envp);
+int			ft_varlen(char *str);
 
 #endif

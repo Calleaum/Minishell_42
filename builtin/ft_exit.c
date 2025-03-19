@@ -3,37 +3,67 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 16:06:09 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/02/18 12:12:28 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/03/19 12:26:15 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	ft_exit(t_mini *mini)
+static long long	ft_atoll(const char *str, long long *j)
 {
-	int	i;
+	long long	result;
+	int			sign;
 
-	if (mini->args[1] && mini->args[2] && isdigit_str(mini->args[1]))
+	result = 0;
+	sign = 1;
+	while (*str == ' ' || (*str >= 9 && *str <= 13))
+		str++;
+	if (*str == '-' || *str == '+')
 	{
-		ft_putendl_fd("minishell: exit: too many arguments", 2);
-		clean(mini);
+		if (*str == '-')
+			sign = -1;
+		str++;
+	}
+	if (sign == -1 && ft_strncmp(str, "9223372036854775808", 19) == 0
+		&& (str[19] == '\0' || (str[19] >= '0' && str[19] <= '9')))
+		return (LLONG_MIN);
+	while (*str >= '0' && *str <= '9')
+	{
+		if (result > (LLONG_MAX - (*str - '0')) / 10)
+			return ((*j) = 1, 0);
+		result = result * 10 + (*str++ - '0');
+	}
+	return (result * sign);
+}
+
+void	ft_exit(t_mini *mini, t_node *list)
+{
+	long long	i;
+	long long	j;
+
+	j = 0;
+	if (list->next && list->next->next && isdigit_str(list->next->data))
+	{
+		ft_putendl_fd("exit\nminishell: exit: too many arguments", 2);
+		free_listenv(mini, list);
 		exit(1);
 	}
-	else if (mini->args[1] && !isdigit_str(mini->args[1]))
-	{
-		ft_putstr_fd("minishell: exit: ", 2);
-		ft_putstr_fd(mini->args[1], 2);
-		ft_putendl_fd(": numeric argument required", 2);
-		clean(mini);
-		exit(2);
-	}
-	else if (mini->args[1])
-		i = ft_atoi(mini->args[1]);
+	if (list->next)
+		i = ft_atoll(list->next->data, &j);
 	else
 		i = 0;
-	clean(mini);
+	if ((list->next && !isdigit_str(list->next->data)) || !j == 0)
+	{
+		ft_putstr_fd("exit\nminishell: exit: ", 2);
+		ft_putstr_fd(list->next->data, 2);
+		ft_putendl_fd(": numeric argument required", 2);
+		free_listenv(mini, list);
+		exit(2);
+	}
+	free_listenv(mini, list);
+	ft_putendl_fd("exit", 2);
 	exit(i);
 }

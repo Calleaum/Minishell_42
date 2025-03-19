@@ -1,27 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcpy.c                                        :+:      :+:    :+:   */
+/*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/14 18:34:35 by calleaum          #+#    #+#             */
-/*   Updated: 2025/03/17 17:11:33 by calleaum         ###   ########.fr       */
+/*   Created: 2025/03/04 16:15:53 by calleaum          #+#    #+#             */
+/*   Updated: 2025/03/17 11:41:05 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../minishell.h"
 
-char	*ft_strcpy(char *dest, char *src)
+int	ft_pwd(t_mini *mini)
 {
-	int	i;
+	char	cwd[PATH_MAX];
 
-	i = 0;
-	while (src[i] != '\0')
+	if (getcwd(cwd, PATH_MAX))
 	{
-		dest[i] = src[i];
-		i++;
+		printf("%s\n", cwd);
+		set_env_value(mini->env, "PWD", cwd);
+		mini->last_exit_status = 0;
+		return (0);
 	}
-	dest[i] = '\0';
-	return (dest);
+	else
+	{
+		perror("pwd");
+		return (1);
+	}
 }

@@ -6,76 +6,64 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 12:54:25 by calleaum          #+#    #+#             */
-/*   Updated: 2025/02/17 17:25:24 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:07:16 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	handle_n_option(char *str, int *i)
+static int	handle_n_option(t_node **args)
 {
-	int	newline;
-	int	j;
+	int		newline;
+	t_node	*current;
+	int		j;
 
 	newline = 1;
-	while (str[*i] == '-' && str[*i + 1] == 'n')
+	current = *args;
+	while (current && current->data[0] == '-'
+		&& current->data[1] == 'n')
 	{
-		j = *i + 1;
-		while (str[j] == 'n')
+		j = 1;
+		while (current->data[j] == 'n')
 			j++;
-		if (str[j] == ' ' || str[j] == '\0')
+		if (current->data[j] == '\0')
 		{
 			newline = 0;
-			*i = j;
-			while (str[*i] == ' ' || (str[*i] >= 9 && str[*i] <= 13))
-				(*i)++;
+			*args = current->next;
 		}
 		else
 			break ;
+		current = *args;
 	}
 	return (newline);
 }
 
-void	print_words_with_spaces(char *str, int *i)
+static void	print_words_with_spaces_linked(t_node *args)
 {
-	int	first_word;
+	int		first_word;
 
 	first_word = 1;
-	while (str[*i])
+	while (args)
 	{
-		if (str[*i] == ' ' || (str[*i] >= 9 && str[*i] <= 13))
-		{
-			if (!first_word)
-				write(1, " ", 1);
-			while (str[*i] == ' ' || (str[*i] >= 9 && str[*i] <= 13))
-				(*i)++;
-		}
-		else if (str[*i] == '\\' && str[*i + 1] != '\0'
-			&& str[*i + 1] != ' ' && str[*i + 1] != '\n')
-		{
-			write(1, &str[*i + 1], 1);
-			(*i) += 2;
-		}
-		else
-		{
-			write(1, &str[*i], 1);
-			first_word = 0;
-			(*i)++;
-		}
+		if (!first_word)
+			write(1, " ", 1);
+		write(1, args->data, ft_strlen(args->data));
+		first_word = 0;
+		args = args->next;
 	}
 }
 
-void	ft_echo(char *str)
+void	ft_echo(t_node *args)
 {
-	int	i;
 	int	newline;
 
-	i = 4;
-	newline = 1;
-	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
-		i++;
-	newline = handle_n_option(str, &i);
-	print_words_with_spaces(str, &i);
+	if (!args)
+	{
+		write(1, "\n", 1);
+		return ;
+	}
+	newline = handle_n_option(&args);
+	print_words_with_spaces_linked(args);
 	if (newline)
 		write(1, "\n", 1);
 }

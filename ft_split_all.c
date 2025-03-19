@@ -6,97 +6,89 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 18:19:32 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/02/19 13:14:13 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/03/13 17:09:36 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_space(char c)
-{
-	return ((c == ' ' || (c >= 9 && c <= 13)));
-}
-
-static int	count_words(const char *str, t_split *split)
+size_t	count_words(const char *s, t_mini *split)
 {
 	split->count = 0;
 	split->in_word = 0;
-	split->in_quote = 0;
-	while (*str)
+	split->quote = 0;
+	while (*s)
 	{
-		if (*str == '"' || *str == '\'')
+		if (*s == '"' || *s == '\'')
 		{
-			split->in_quote = !split->in_quote;
-			if (!split->in_word)
-			{
-				split->count++;
-				split->in_word = 1;
-			}
+			if (!split->quote)
+				split->quote = *s;
+			else if (split->quote == *s)
+				split->quote = 0;
 		}
-		else if ((!is_space(*str) || split->in_quote) && !split->in_word)
-		{
-			split->count++;
-			split->in_word = 1;
-		}
-		else
+		else if (ft_isspace(*s) && !split->quote)
 			split->in_word = 0;
-		str++;
+		else if (!split->in_word)
+		{
+			split->in_word = 1;
+			split->count++;
+		}
+		s++;
 	}
+	if (split->quote)
+		return (ft_putendl_fd("Error: Unclosed quote detected", 2), -1);
 	return (split->count);
 }
 
-static char	*extract_word(const char **str, t_split *split)
+char	*copy_word(const char **s, t_mini *split)
 {
-	char		*word;
+	char	*dst;
+	char	*word;
 
-	split->length = 0;
-	split->in_quote = 0;
-	split->i = 0;
-	while (is_space(**str))
-		(*str)++;
-	split->start = *str;
-	while (**str && (!is_space(**str) || split->in_quote))
-	{
-		if (**str == '"' || **str == '\'')
-			split->in_quote = !split->in_quote;
-		split->length++;
-		(*str)++;
-	}
-	word = (char *)malloc(split->length + 1);
+	split->quote = 0;
+	word = malloc(ft_strlen(*s) + 1);
 	if (!word)
 		return (NULL);
-	while (split->i < split->length)
+	dst = word;
+	while (**s && (split->quote || !ft_isspace(**s)))
 	{
-		word[split->i] = split->start[split->i];
-		split->i++;
+		if (**s == '"' || **s == '\'')
+		{
+			if (!split->quote)
+				split->quote = **s;
+			else if (split->quote == **s)
+				split->quote = 0;
+			else
+				*dst++ = **s;
+			(*s)++;
+			continue ;
+		}
+		*dst++ = *(*s)++;
 	}
-	word[split->length] = '\0';
+	*dst = '\0';
 	return (word);
 }
 
-char	**ft_split_all(const char *str)
+char	**ft_split_all(const char *s)
 {
-	t_split	split;
-	int		count_word;
+	t_mini	split;
+	size_t	words;
+	size_t	i;
 	char	**result;
-	int		i;
 
-	if (!str)
+	if (!s)
 		return (NULL);
-	count_word = count_words(str, &split);
-	result = (char **)malloc(sizeof(char *) * (count_word + 1));
+	words = count_words(s, &split);
+	result = (char **)malloc(sizeof(char *) * (words + 1));
 	if (!result)
 		return (NULL);
 	i = 0;
-	while (*str && i < count_word)
+	while (*s)
 	{
-		while (is_space(*str))
-			str++;
-		if (*str)
-		{
-			result[i] = extract_word(&str, &split);
-			i++;
-		}
+		while (*s && ft_isspace(*s))
+			s++;
+		if (*s)
+			result[i++] = copy_word(&s, &split);
 	}
 	result[i] = NULL;
 	return (result);

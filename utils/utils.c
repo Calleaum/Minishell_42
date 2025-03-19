@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 15:10:17 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/02/18 13:28:30 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/03/19 12:24:40 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	only_space(t_mini *mini)
 		return (1);
 	while (mini->str[i])
 	{
-		if (!is_space(mini->str[i]))
+		if (!ft_isspace(mini->str[i]))
 			return (0);
 		i++;
 	}
@@ -44,4 +44,32 @@ int	isdigit_str(char *str)
 		i++;
 	}
 	return (1);
+}
+
+int	ft_isspace(char c)
+{
+	return (c == ' ' || (c >= 9 && c <= 13));
+}
+
+int	ft_varlen(char *str)
+{
+	int	len;
+
+	len = 0;
+	while (str[len] && (ft_isalnum(str[len]) || str[len] == '_'))
+		len++;
+	return (len);
+}
+
+void	display_tokens(t_node *head)
+{
+	t_node	*current;
+
+	current = head;
+	while (current)
+	{
+		printf("Token: %s, $ in single quote: %d\n",
+			current->data, current->type);
+		current = current->next;
+	}
 }
