@@ -6,7 +6,7 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/03/19 12:31:27 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/03/19 12:32:07 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ typedef struct s_env
 typedef struct s_mini
 {
 	char	*str;
-	char	*tmpstr;
 	int		last_exit_status;
 	int		i;
 	char	*current_token;
