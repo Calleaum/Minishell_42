@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 09:54:45 by calleaum          #+#    #+#             */
-/*   Updated: 2025/03/18 14:31:56 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/03/19 15:40:09 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,8 +129,8 @@ char	*process_dollar_sign(char *str, int *i, t_expand *exp,
 		if (!expand_env_variable(str, i, exp, env))
 			return (NULL);
 	}
-	else if ((!str[*i] || exp->sq || exp->dq || !exp->sq || !exp->dq)
-		&& !(str[*i] == '\'' || str[*i] == '"'))
+	else if (!((str[*i] == '\'' || str[*i] == '"')
+			&& !exp->sq && !exp->dq) || !str[*i])
 		exp->expanded[exp->j++] = '$';
 	return (exp->expanded);
 }

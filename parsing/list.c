@@ -6,13 +6,13 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:42:12 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/03/11 18:44:54 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/03/19 14:32:46 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	handle_startfinal(t_node **head, char **current_token, int *i, int oui)
+static void	handle_startfinal(t_node **head, char **current_token, int *i, int oui)
 {
 	if (!oui)
 	{
@@ -36,7 +36,7 @@ void	handle_startfinal(t_node **head, char **current_token, int *i, int oui)
 	}
 }
 
-void	process_special_char(t_node **head, char **current_token,
+static void	process_special_char(t_node **head, char **current_token,
 								char *input, int *i)
 {
 	if (*current_token)
@@ -49,7 +49,7 @@ void	process_special_char(t_node **head, char **current_token,
 	handle_special_char(head, input, i);
 }
 
-int	handle_quotes(t_node **head, char **current_token, char *input, int *i)
+static int	handle_quotes(t_node **head, char **current_token, char *input, int *i)
 {
 	char	*quoted_part;
 	char	*temp;
@@ -75,7 +75,7 @@ int	handle_quotes(t_node **head, char **current_token, char *input, int *i)
 	return (1);
 }
 
-int	handle_regular_char(t_node **head, char **current_token, char c, int *i)
+static int	handle_regular_char(t_node **head, char **current_token, char c, int *i)
 {
 	int	result;
 
