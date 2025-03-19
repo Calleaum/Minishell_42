@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/03/19 12:29:10 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/03/19 13:54:45 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	handle_command(t_mini *mini, t_node *list)
 {
-	if (!(ft_strncmp(list->data, "exit", INT_MAX)))
+	if (!ft_strncmp(list->data, "exit", INT_MAX))
 		ft_exit(mini, list);
 	else if (!ft_strncmp(list->data, "echo", INT_MAX))
 		ft_echo(list->next);
@@ -29,13 +29,10 @@ void	handle_command(t_mini *mini, t_node *list)
 	else if (!ft_strncmp(list->data, "unset", INT_MAX))
 		ft_unset(mini->env, list, mini);
 	else
-		if (list == NULL)
-			printf("Token: , $ in single quote: 0\n");
-		else
-			printf("%s: command not found\n", list->data);
+		ft_printf("%s: command not found\n", list->data);
 }
 
-int	empty_line(char *line)
+static int	empty_line(char *line)
 {
 	int	i;
 
@@ -50,10 +47,32 @@ int	empty_line(char *line)
 	return (0);
 }
 
+static int	is_unclosedquote(char *str)
+{
+	int	i;
+	int	sq;
+	int	dq;
+
+	i = 0;
+	sq = 0;
+	dq = 0;
+	while (str[i])
+	{
+		if (str[i] == '\'' && !dq)
+			sq = !sq;
+		else if (str[i] == '"' && !sq)
+			dq = !dq;
+		i++;
+	}
+	if (sq || dq)
+		return (ft_putendl_fd("Error: Unclosed quote detected", 2), -1);
+	return (0);
+}
+
 int	main(int ac, char **av, char **env)
 {
 	t_mini	mini;
-	t_node *list = NULL;
+	t_node	*list;
 
 	setup_signals();
 	mini.last_exit_status = 0;
@@ -72,7 +91,7 @@ int	main(int ac, char **av, char **env)
 		if (empty_line(mini.str))
 			continue ;
 		add_history(mini.str);
-		if (count_words(mini.str, &mini) == (size_t)-1)
+		if (is_unclosedquote(mini.str))
 		{
 			free(mini.str);
 			continue ;

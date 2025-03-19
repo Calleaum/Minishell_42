@@ -7,7 +7,6 @@ SRC =	minishell.c \
 		builtin/ft_export.c \
 		builtin/ft_pwd.c \
 		builtin/ft_unset.c \
-		ft_split_all.c \
 		parsing/list_utils.c \
 		parsing/list_utils2.c \
 		parsing/list.c \
