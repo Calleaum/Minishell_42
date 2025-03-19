@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/03/19 13:54:45 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/03/19 15:44:51 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ int	main(int ac, char **av, char **env)
 		{
 			free(mini.str);
 			free_env(mini.env);
+			write(2, "exit\n", 5);
 			break ;
 		}
 		if (empty_line(mini.str))
