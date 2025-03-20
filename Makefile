@@ -21,7 +21,8 @@ SRC =	minishell.c \
 		utils/unset/utils_unset.c \
 		utils/cd/utils_cd.c \
 		utils/export/utils_export.c \
-		free.c
+		free.c \
+		exec/test.c
 
 NAME = minishell
 OBJ = $(SRC:.c=.o)

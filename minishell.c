@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/03/20 12:16:16 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/03/20 20:00:36 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,58 +69,6 @@ static int	is_unclosedquote(char *str)
 	return (0);
 }
 
-// void execute_command(t_mini *mini, t_node *cmd)
-// {
-//     if (!cmd)
-//         return;
-    
-//     if (!ft_strncmp(cmd->data, "exit", INT_MAX))
-//         ft_exit(mini, cmd);
-//     else if (!ft_strncmp(cmd->data, "echo", INT_MAX))
-//         ft_echo(cmd->next);
-//     else if (!ft_strncmp(cmd->data, "cd", INT_MAX))
-//         ft_cd(mini, cmd);
-//     else if (!ft_strncmp(cmd->data, "pwd", INT_MAX))
-//         ft_pwd(mini);
-//     else if (!ft_strncmp(cmd->data, "env", INT_MAX))
-//         ft_env(mini, cmd);
-//     else if (!ft_strncmp(cmd->data, "export", INT_MAX))
-//         ft_export(mini->env, cmd);
-//     else if (!ft_strncmp(cmd->data, "unset", INT_MAX))
-//         ft_unset(mini->env, cmd, mini);
-//     else
-//         execve(cmd->data, parse_args(cmd), mini->env->env_vars);
-// }
-
-// void execute_pipeline(t_mini *mini, t_node *list)
-// {
-//     int fd[2];
-//     pid_t pid;
-//     int in_fd = 0;
-//     t_node *cmd = list;
-    
-//     while (cmd)
-//     {
-//         if (cmd->type == PIPE)
-//         {
-//             pipe(fd);
-//             if ((pid = fork()) == 0)
-//             {
-//                 dup2(in_fd, 0);
-//                 close(fd[0]);
-//                 dup2(fd[1], 1);
-//                 execute_command(mini, cmd);
-//                 exit(0);
-//             }
-//             close(fd[1]);
-//             in_fd = fd[0];
-//         }
-//         cmd = cmd->next;
-//     }
-//     while (wait(NULL) > 0);
-// }
-
-
 int	main(int ac, char **av, char **env)
 {
 	t_mini	mini;
@@ -158,7 +106,8 @@ int	main(int ac, char **av, char **env)
 		}
 		list = tokenize_input(oui, &mini);
 		free(oui);
-		handle_command(&mini, list);
+		execute_pipeline(&mini, list);
+		// handle_command(&mini, list);
 		free_list(list);
 		free(mini.str);
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/03/20 11:40:09 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/03/20 19:59:40 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 # include "libftFINAL/libft.h"
 # include <sys/types.h>
+# include <sys/wait.h>
 # include <unistd.h>
 # include <linux/limits.h>
 # include <limits.h>
@@ -32,6 +33,14 @@ typedef struct s_node
 	int				type;
 	struct s_node	*next;
 }	t_node;
+
+typedef struct s_cmd
+{
+	char	**args;
+	int		arg_count;
+	t_node	*start;
+	t_node	*end;
+}	t_cmd;
 
 typedef struct s_env_node
 {
@@ -80,8 +89,7 @@ typedef struct s_expand
 # define CMD 6
 # define ARG 7
 
-void execute_pipeline(t_mini *mini, t_node *list);
-void execute_command(t_mini *mini, t_node *cmd);
+int			execute_pipeline(t_mini *mini, t_node *tokens);
 
 // list //
 void		init_tokenization(t_node **head, t_mini *n);
