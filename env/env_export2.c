@@ -6,7 +6,7 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 10:32:40 by calleaum          #+#    #+#             */
-/*   Updated: 2025/03/18 12:12:12 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/03/19 15:57:59 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	init_export_var(char *arg, char *var_name, int *name_len)
 	ft_memset(var_name, 0, var_name_size);
 	if (!validate_var_name(arg, *name_len))
 	{
-		printf("export: '%s': identifiant non valide\n", arg);
+		printf("export: '%s': not a valid identifier\n", arg);
 		return (0);
 	}
 	str_n_copy(var_name, arg, *name_len);

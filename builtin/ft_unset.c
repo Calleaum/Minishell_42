@@ -6,7 +6,7 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 14:44:20 by calleaum          #+#    #+#             */
-/*   Updated: 2025/03/17 17:05:47 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/03/20 12:22:35 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,23 @@ static int	remove_env_var(t_env *env, const char *var_name)
 		i++;
 	}
 	return (0);
+}
+
+static int is_valid_identifier(const char *name)
+{
+	int i;
+	
+	if (!name || !*name || (!ft_isalpha(name[0]) && name[0] != '_'))
+		return (0);
+	i = 1;
+	while (name[i])
+	{
+		if (!ft_isalnum(name[i]) && name[i] != '_')
+			return (0);
+		i++;
+	}
+	
+	return (1);
 }
 
 static int	remove_env_var_from_tokens(t_node **head, const char *var_name)
@@ -60,42 +77,53 @@ static int	remove_env_var_from_tokens(t_node **head, const char *var_name)
 }
 
 /* Traiter l'argument unset */
-static int	handle_unset_arg(t_env *env, char *arg)
+static int handle_unset_arg(t_env *env, char *arg)
 {
-	char	var_name[256];
-	size_t	name_len;
-	int		result_env_var;
-	int		result_list;
-
+	char var_name[256];
+	size_t name_len;
+	int result_env_var;
+	int result_list;
+	
+	if (!is_valid_identifier(arg))
+	{
+		ft_putstr_fd("unset: `", 2);
+		ft_putstr_fd(arg, 2);
+		ft_putstr_fd("': not a valid identifier\n", 2);
+		return (0);
+	}
 	name_len = ft_strlen(arg);
 	if (name_len >= (size_t)(sizeof(var_name) - 1))
 		name_len = sizeof(var_name) - 1;
 	ft_memset(var_name, 0, sizeof(var_name));
 	str_n_copy(var_name, arg, name_len);
 	var_name[name_len] = '\0';
+	
 	result_env_var = remove_env_var(env, var_name);
 	result_list = remove_env_var_from_tokens(&env->tokens, var_name);
-	if (result_env_var || result_list)
-		return (1);
-	return (0);
+	
+	return (result_env_var || result_list);
 }
 
-/* Fonction principale pour unset */
-int	ft_unset(t_env *env, t_node *list, t_mini *mini)
-{
-	t_node	*current;
-	int		success;
 
+/* Fonction principale pour unset */
+int ft_unset(t_env *env, t_node *list, t_mini *mini)
+{
+	t_node *current;
+	int success;
+	int error_found;
+	
 	success = 1;
+	error_found = 0;
 	current = list->next;
+	
 	while (current != NULL)
 	{
 		if (!handle_unset_arg(env, current->data))
 		{
-			success = 0;
+			error_found = 1;
 		}
 		current = current->next;
 	}
-	mini->last_exit_status = 0;
+	mini->last_exit_status = error_found ? 1 : 0;
 	return (success);
 }

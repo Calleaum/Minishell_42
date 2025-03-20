@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/03/19 13:58:31 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/03/20 11:40:09 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include "libftFINAL/libft.h"
+# include <sys/types.h>
 # include <unistd.h>
 # include <linux/limits.h>
 # include <limits.h>
@@ -20,6 +21,7 @@
 # include <signal.h>
 # include <errno.h>
 # include <stdlib.h>
+# include <fcntl.h>
 # include <stdbool.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -77,6 +79,9 @@ typedef struct s_expand
 # define PIPE 5
 # define CMD 6
 # define ARG 7
+
+void execute_pipeline(t_mini *mini, t_node *list);
+void execute_command(t_mini *mini, t_node *cmd);
 
 // list //
 void		init_tokenization(t_node **head, t_mini *n);
