@@ -49,7 +49,7 @@ int	fd_printf(int fd, const char *format, ...)
 			count += ft_variadics(fd, *format, args);
 		}
 		else
-			count += write(1, format, 1);
+			count += write(fd, format, 1);
 		format++;
 	}
 	va_end(args);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:22:40 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/03/25 13:09:46 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/03/25 14:45:26 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -426,6 +426,38 @@ static char *find_command_path(char *cmd, t_mini *mini)
 	return (NULL);
 }
 
+
+static void	print_command_not_found(const char *cmd)
+{
+	char		buffer[256];
+	int			i;
+	int			j;
+	const char	*prefix;
+	const char	*suffix;
+
+	i = -1;
+	prefix = "minishell: ";
+	while (prefix[++i])
+		buffer[i] = prefix[i];
+	j = -1;
+	while (cmd[++j] && i < 250) 
+	{
+		buffer[i] = cmd[j];
+		i++;
+	}
+	suffix = ": command not found\n";
+	j = -1;
+	while (suffix[++j] && i < 255)
+	{
+		buffer[i] = suffix[j];
+		i++;
+	}
+	buffer[i] = '\0';
+	write(2, buffer, i);
+}
+
+
+
 // Executes an external command
 static int execute_external_command(t_mini *mini, char **args)
 {
@@ -434,12 +466,18 @@ static int execute_external_command(t_mini *mini, char **args)
 	int status;
 	
 	path = find_command_path(args[0], mini);
+	// if (!path)
+	// {
+	// 	write(2, "minishell: ", 11);
+	// 	write(2, args[0], ft_strlen(args[0]));
+	// 	write(2, ": command not found\n", 20);
+	// 	return (127);
+	// }
 	if (!path)
 	{
-		fd_printf(2, "minishell: %s: command not found\n", args[0]);
+		print_command_not_found(args[0]);
 		return (127);
 	}
-	
 	pid = fork();
 	if (pid == -1)
 	{
