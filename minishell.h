@@ -6,7 +6,7 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/03/25 09:06:55 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/03/25 11:23:36 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ void		display_tokens(t_node *head);
 void		setup_signals(void);
 
 // echo //
-void		ft_echo(t_node *args);
+void		ft_echo(t_mini *mini, t_node *args);
 
 // cd //
 int			ft_cd(t_mini *mini, t_node *list);

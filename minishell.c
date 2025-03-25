@@ -6,7 +6,7 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/03/25 09:40:39 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/03/25 11:23:47 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	handle_command(t_mini *mini, t_node *list)
 	if (!ft_strncmp(list->data, "exit", INT_MAX))
 		ft_exit(mini, list);
 	else if (!ft_strncmp(list->data, "echo", INT_MAX))
-		ft_echo(list->next);
+		ft_echo(mini, list->next);
 	else if (!ft_strncmp(list->data, "cd", INT_MAX))
 		ft_cd(mini, list);
 	else if (!ft_strncmp(list->data, "pwd", INT_MAX))

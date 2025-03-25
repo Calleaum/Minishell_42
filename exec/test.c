@@ -6,7 +6,7 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:22:40 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/03/25 09:08:33 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/03/25 12:14:21 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,26 +90,49 @@ static int handle_heredoc(char *delimiter, t_mini *mini)
     int     pipe_fds[2];
     char    *line;
     char    *expanded_line;
+    int     line_count = 0;
+    
+    // Set a reasonable maximum for heredoc input (e.g., 16 lines)
+    const int MAX_HEREDOC_LINES = 16;
     
     if (pipe(pipe_fds) == -1)
     {
         perror("minishell: pipe");
         return (-1);
     }
+    
+    // Install signal handler for SIGINT
+    
     while (1)
     {
-        ft_putstr_fd("> ", 1);
-        line = get_next_line(0); // Assuming you have get_next_line function
-        if (!line)
+        // Prevent infinite or very large heredoc
+        if (line_count >= MAX_HEREDOC_LINES)
+        {
+            ft_putstr_fd("\nminishell: warning: here-document delimited by end-of-file\n", 2);
             break;
+        }
+        
+        ft_putstr_fd("> ", 1);
+        line = get_next_line(0);
+        
+        // Handle EOF or read error
+        if (!line)
+        {
+            ft_putstr_fd("\nminishell: warning: here-document delimited by end-of-file\n", 2);
+            break;
+        }
+        
         // Remove newline character if present
         if (line[ft_strlen(line) - 1] == '\n')
             line[ft_strlen(line) - 1] = '\0';
+        
+        // Check delimiter
         if (ft_strcmp(line, delimiter) == 0)
         {
             free(line);
             break;
         }
+        
         // Expand variables in heredoc line if not single quoted delimiter
         if (ft_strchr(delimiter, '\'') == NULL)
         {
@@ -117,10 +140,13 @@ static int handle_heredoc(char *delimiter, t_mini *mini)
             free(line);
             line = expanded_line;
         }
+        
         ft_putstr_fd(line, pipe_fds[1]);
         ft_putstr_fd("\n", pipe_fds[1]);
         free(line);
+        line_count++;
     }
+    
     close(pipe_fds[1]);
     if (dup2(pipe_fds[0], STDIN_FILENO) == -1)
     {
@@ -313,7 +339,7 @@ static t_node **split_commands(t_node *tokens, int *cmd_count)
 static int execute_builtin(t_mini *mini, t_node *tokens)
 {
 	if (!ft_strcmp(tokens->data, "echo"))
-		ft_echo(tokens->next);
+		ft_echo(mini, tokens->next);
 	else if (!ft_strcmp(tokens->data, "cd"))
 		return (ft_cd(mini, tokens));
 	else if (!ft_strcmp(tokens->data, "pwd"))
