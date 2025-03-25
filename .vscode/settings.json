@@ -1,7 +1,0 @@
-{
-	"files.associations": {
-		"*.tcc": "c",
-		"ostream": "c",
-		"minishell.h": "c"
-	}
-}
