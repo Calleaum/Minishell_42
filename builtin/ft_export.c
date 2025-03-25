@@ -6,7 +6,7 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 11:37:16 by calleaum          #+#    #+#             */
-/*   Updated: 2025/03/17 17:06:47 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/03/25 08:42:45 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ t_env_node	*build_sorted_env_list(t_env *env)
 	return (head);
 }
 
-int	ft_export(t_env *env, t_node *list)
+int	ft_export(t_mini *mini, t_node *list)
 {
 	t_node	*current;
 	int		success;
@@ -110,14 +110,14 @@ int	ft_export(t_env *env, t_node *list)
 
 	if (list->next == NULL)
 	{
-		print_env(env);
+		print_env(mini->env);
 		return (1);
 	}
 	current = list->next;
 	success = 1;
 	while (current != NULL)
 	{
-		arg_result = handle_export_arg(env, current->data);
+		arg_result = handle_export_arg(mini, current->data);
 		if (arg_result == 0)
 			success = 0;
 		current = current->next;

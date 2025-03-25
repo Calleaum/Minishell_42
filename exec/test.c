@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:22:40 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/03/20 20:07:03 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/03/25 09:08:33 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -319,9 +319,9 @@ static int execute_builtin(t_mini *mini, t_node *tokens)
 	else if (!ft_strcmp(tokens->data, "pwd"))
 		return (ft_pwd(mini));
 	else if (!ft_strcmp(tokens->data, "export"))
-		return (ft_export(mini->env, tokens));
+		return (ft_export(mini, tokens));
 	else if (!ft_strcmp(tokens->data, "unset"))
-		return (ft_unset(mini->env, tokens, mini));
+		return (ft_unset(mini, tokens));
 	else if (!ft_strcmp(tokens->data, "env"))
 		return (ft_env(mini, tokens));
 	else if (!ft_strcmp(tokens->data, "exit"))

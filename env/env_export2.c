@@ -6,7 +6,7 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 10:32:40 by calleaum          #+#    #+#             */
-/*   Updated: 2025/03/19 15:57:59 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/03/25 08:58:25 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	init_export_var(char *arg, char *var_name, int *name_len)
 	return (1);
 }
 
-int	handle_export_arg(t_env *env, char *arg)
+int	handle_export_arg(t_mini *mini, char *arg)
 {
 	char	var_name[256];
 	char	*equals;
@@ -57,22 +57,23 @@ int	handle_export_arg(t_env *env, char *arg)
 	int		name_len;
 
 	if (!init_export_var(arg, var_name, &name_len))
-		return (0);
+		return (mini->last_exit_status = 1, 0);
 	equals = strchr(arg, '=');
 	if (equals == NULL)
 	{
-		if (!var_exists(env, var_name))
-			return (add_env_var_no_value(env, var_name));
-		return (1);
+		if (!var_exists(mini->env, var_name))
+		{
+			if (!add_env_var_no_value(mini->env, var_name))
+				return (mini->last_exit_status = 1, 0);
+		}
+		return (mini->last_exit_status = 0, 1);
 	}
 	if (!create_new_var(&new_var, arg, name_len, equals))
-		return (0);
-	if (!update_or_add_env_var(env, new_var))
-	{
-		free(new_var);
-		return (0);
-	}
+		return (mini->last_exit_status = 1, 0);
+	if (!update_or_add_env_var(mini->env, new_var))
+		return (free(new_var), mini->last_exit_status = 1, 0);
 	free(new_var);
+	mini->last_exit_status = 0;
 	return (1);
 }
 

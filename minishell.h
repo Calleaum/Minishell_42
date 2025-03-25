@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/03/20 19:59:40 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/03/25 09:06:55 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ int			ft_pwd(t_mini *mini);
 int			update_pwd(t_env *env);
 
 // unset //
-int			ft_unset(t_env *env, t_node *list, t_mini *mini);
+int			ft_unset(t_mini *mini, t_node *list);
 int			check_env_match(char *env_var, const char *var_name);
 int			check_token_match(char *token_data, const char *var_name);
 
@@ -151,13 +151,13 @@ void		free_env(t_env *env);
 t_env		*init_env(char **envp);
 
 //export//
-int			ft_export(t_env *env, t_node *list);
+int			ft_export(t_mini *mini, t_node *list);
 int			add_env_var_no_value(t_env *env, const char *name);
 char		*str_n_copy(char *dest, const char *src, int n);
 int			is_valid_first_char(char c);
 int			is_valid_subsequent_char(char c);
 int			validate_var_name(char *arg, int name_len);
-int			handle_export_arg(t_env *env, char *arg);
+int			handle_export_arg(t_mini *mini, char *arg);
 int			update_or_add_env_var(t_env *env, const char *var);
 int			var_exists(t_env *env, char *arg);
 void		free_env_list(t_env_node *head);
@@ -168,5 +168,4 @@ void		init_mini(t_mini *mini, char **envp);
 int			ft_varlen(char *str);
 int			ft_isspace(char c);
 int			isdigit_str(char *str);
-
 #endif

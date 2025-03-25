@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/03/20 20:00:36 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/03/25 09:40:39 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ void	handle_command(t_mini *mini, t_node *list)
 	else if (!ft_strncmp(list->data, "env", INT_MAX))
 		ft_env(mini, list);
 	else if (!ft_strncmp(list->data, "export", INT_MAX))
-		ft_export(mini->env, list);
+		ft_export(mini, list);
 	else if (!ft_strncmp(list->data, "unset", INT_MAX))
-		ft_unset(mini->env, list, mini);
+		ft_unset(mini, list);
 	else
 		ft_printf("%s: command not found\n", list->data);
 }
