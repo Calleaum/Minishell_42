@@ -3,34 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/03/25 11:23:47 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/03/25 15:34:01 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_command(t_mini *mini, t_node *list)
-{
-	if (!ft_strncmp(list->data, "exit", INT_MAX))
-		ft_exit(mini, list);
-	else if (!ft_strncmp(list->data, "echo", INT_MAX))
-		ft_echo(mini, list->next);
-	else if (!ft_strncmp(list->data, "cd", INT_MAX))
-		ft_cd(mini, list);
-	else if (!ft_strncmp(list->data, "pwd", INT_MAX))
-		ft_pwd(mini);
-	else if (!ft_strncmp(list->data, "env", INT_MAX))
-		ft_env(mini, list);
-	else if (!ft_strncmp(list->data, "export", INT_MAX))
-		ft_export(mini, list);
-	else if (!ft_strncmp(list->data, "unset", INT_MAX))
-		ft_unset(mini, list);
-	else
-		ft_printf("%s: command not found\n", list->data);
-}
+// void	handle_command(t_mini *mini, t_node *list)
+// {
+// 	if (!ft_strncmp(list->data, "exit", INT_MAX))
+// 		ft_exit(mini, list);
+// 	else if (!ft_strncmp(list->data, "echo", INT_MAX))
+// 		ft_echo(mini, list->next);
+// 	else if (!ft_strncmp(list->data, "cd", INT_MAX))
+// 		ft_cd(mini, list);
+// 	else if (!ft_strncmp(list->data, "pwd", INT_MAX))
+// 		ft_pwd(mini);
+// 	else if (!ft_strncmp(list->data, "env", INT_MAX))
+// 		ft_env(mini, list);
+// 	else if (!ft_strncmp(list->data, "export", INT_MAX))
+// 		ft_export(mini, list);
+// 	else if (!ft_strncmp(list->data, "unset", INT_MAX))
+// 		ft_unset(mini, list);
+// 	else
+// 		ft_printf("%s: command not found\n", list->data);
+// }
 
 static int	empty_line(char *line)
 {
@@ -104,11 +104,11 @@ int	main(int ac, char **av, char **env)
 			free(mini.str);
 			continue;
 		}
+		free(mini.str);
 		list = tokenize_input(oui, &mini);
 		free(oui);
 		execute_pipeline(&mini, list);
 		// handle_command(&mini, list);
-		free_list(list);
-		free(mini.str);
+		// free_list(list);
 	}
 }

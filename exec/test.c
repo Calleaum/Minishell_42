@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:22:40 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/03/25 14:45:26 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/03/25 16:16:27 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,8 +214,12 @@ static char **extract_command_args(t_node *tokens)
 	while (current)
 	{
 		if (current->type == CMD || current->type == ARG)
+		{
 			count++;
-		current = current->next;
+			current = current->next;
+		}
+		else
+			break ;
 	}
 	
 	// Allocate memory for args array
@@ -340,7 +344,7 @@ static int execute_builtin(t_mini *mini, t_node *tokens)
 {
 	if (!ft_strcmp(tokens->data, "echo"))
 		ft_echo(mini, tokens->next);
-	else if (!ft_strcmp(tokens->data, "cd"))
+	if (!ft_strcmp(tokens->data, "cd"))
 		return (ft_cd(mini, tokens));
 	else if (!ft_strcmp(tokens->data, "pwd"))
 		return (ft_pwd(mini));
@@ -352,7 +356,6 @@ static int execute_builtin(t_mini *mini, t_node *tokens)
 		return (ft_env(mini, tokens));
 	else if (!ft_strcmp(tokens->data, "exit"))
 		ft_exit(mini, tokens);
-	
 	return (0);
 }
 
@@ -466,18 +469,8 @@ static int execute_external_command(t_mini *mini, char **args)
 	int status;
 	
 	path = find_command_path(args[0], mini);
-	// if (!path)
-	// {
-	// 	write(2, "minishell: ", 11);
-	// 	write(2, args[0], ft_strlen(args[0]));
-	// 	write(2, ": command not found\n", 20);
-	// 	return (127);
-	// }
 	if (!path)
-	{
-		print_command_not_found(args[0]);
-		return (127);
-	}
+		return (print_command_not_found(args[0]), 127);
 	pid = fork();
 	if (pid == -1)
 	{
@@ -520,6 +513,7 @@ int execute_pipeline(t_mini *mini, t_node *tokens)
 	
 	// Split the token list into separate commands
 	commands = split_commands(tokens, &cmd_count);
+	free_list(tokens);
 	if (!commands)
 		return (1);
 	
@@ -627,9 +621,7 @@ int execute_pipeline(t_mini *mini, t_node *tokens)
 			if (commands[i] && commands[i]->type == CMD)
 			{
 				if (is_builtin(commands[i]->data))
-				{
 					exit(execute_builtin(mini, commands[i]));
-				}
 				else
 				{
 					char **args = extract_command_args(commands[i]);
@@ -642,7 +634,9 @@ int execute_pipeline(t_mini *mini, t_node *tokens)
 					for (int j = 0; args[j]; j++)
 						free(args[j]);
 					free(args);
-					
+					free_env(mini->env);
+					free_list(*commands);
+					free(commands);
 					exit(exit_status);
 				}
 			}
@@ -659,7 +653,9 @@ int execute_pipeline(t_mini *mini, t_node *tokens)
 				for (int j = 0; args[j]; j++)
 					free(args[j]);
 				free(args);
-				
+				free_env(mini->env);
+				free_list(*commands);
+				free(commands);
 				exit(exit_status);
 			}
 			else
