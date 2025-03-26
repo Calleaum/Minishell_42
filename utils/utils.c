@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 15:10:17 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/03/19 13:57:49 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/03/25 17:21:21 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ void	display_tokens(t_node *head)
 	current = head;
 	while (current)
 	{
-		printf("Token: %s, $ in single quote: %d\n",
-			current->data, current->type);
+		printf("Token: %s\n",
+			current->data);
 		current = current->next;
 	}
 }

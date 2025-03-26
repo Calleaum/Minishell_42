@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 12:54:25 by calleaum          #+#    #+#             */
-/*   Updated: 2025/03/25 16:14:12 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/03/25 17:13:54 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static void	print_words_with_spaces_linked(t_node *args)
 	}
 }
 
-void	ft_echo(t_mini *mini, char **args)
+void	ft_echo(t_mini *mini, t_node *args)
 {
 	int	newline;
 
@@ -62,9 +62,9 @@ void	ft_echo(t_mini *mini, char **args)
 		write(1, "\n", 1);
 		return ;
 	}
-	// newline = handle_n_option(&args);
+	newline = handle_n_option(&args);
 	print_words_with_spaces_linked(args);
 	mini->last_exit_status = 0;
-	// if (newline)
-	// 	write(1, "\n", 1);
+	if (newline)
+		write(1, "\n", 1);
 }

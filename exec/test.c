@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:22:40 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/03/25 16:16:27 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/03/26 14:00:37 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,75 +87,75 @@ static int handle_output_append(char *filename)
 // Handles heredoc redirection
 static int handle_heredoc(char *delimiter, t_mini *mini)
 {
-    int     pipe_fds[2];
-    char    *line;
-    char    *expanded_line;
-    int     line_count = 0;
-    
-    // Set a reasonable maximum for heredoc input (e.g., 16 lines)
-    const int MAX_HEREDOC_LINES = 16;
-    
-    if (pipe(pipe_fds) == -1)
-    {
-        perror("minishell: pipe");
-        return (-1);
-    }
-    
-    // Install signal handler for SIGINT
-    
-    while (1)
-    {
-        // Prevent infinite or very large heredoc
-        if (line_count >= MAX_HEREDOC_LINES)
-        {
-            ft_putstr_fd("\nminishell: warning: here-document delimited by end-of-file\n", 2);
-            break;
-        }
-        
-        ft_putstr_fd("> ", 1);
-        line = get_next_line(0);
-        
-        // Handle EOF or read error
-        if (!line)
-        {
-            ft_putstr_fd("\nminishell: warning: here-document delimited by end-of-file\n", 2);
-            break;
-        }
-        
-        // Remove newline character if present
-        if (line[ft_strlen(line) - 1] == '\n')
-            line[ft_strlen(line) - 1] = '\0';
-        
-        // Check delimiter
-        if (ft_strcmp(line, delimiter) == 0)
-        {
-            free(line);
-            break;
-        }
-        
-        // Expand variables in heredoc line if not single quoted delimiter
-        if (ft_strchr(delimiter, '\'') == NULL)
-        {
-            expanded_line = expand_variables(line, mini->last_exit_status, mini->env);
-            free(line);
-            line = expanded_line;
-        }
-        
-        ft_putstr_fd(line, pipe_fds[1]);
-        ft_putstr_fd("\n", pipe_fds[1]);
-        free(line);
-        line_count++;
-    }
-    
-    close(pipe_fds[1]);
-    if (dup2(pipe_fds[0], STDIN_FILENO) == -1)
-    {
-        close(pipe_fds[0]);
-        perror("minishell: dup2");
-        return (-1);
-    }
-    close(pipe_fds[0]);
-    return (0);
+	int     pipe_fds[2];
+	char    *line;
+	char    *expanded_line;
+	int     line_count = 0;
+	
+	// Set a reasonable maximum for heredoc input (e.g., 16 lines)
+	// const int MAX_HEREDOC_LINES = 16;
+	
+	if (pipe(pipe_fds) == -1)
+	{
+		perror("minishell: pipe");
+		return (-1);
+	}
+	
+	// Install signal handler for SIGINT
+	
+	while (1)
+	{
+		// Prevent infinite or very large heredoc
+		// if (line_count >= MAX_HEREDOC_LINES)
+		// {
+		//     ft_putstr_fd("\nminishell: warning: here-document delimited by end-of-file\n", 2);
+		//     break;
+		// }
+		
+		ft_putstr_fd("> ", 1);
+		line = get_next_line(0);
+		
+		// Handle EOF or read error
+		if (!line)
+		{
+			ft_putstr_fd("\nminishell: warning: here-document delimited by end-of-file\n", 2);
+			break;
+		}
+		
+		// Remove newline character if present
+		if (line[ft_strlen(line) - 1] == '\n')
+			line[ft_strlen(line) - 1] = '\0';
+		
+		// Check delimiter
+		if (ft_strcmp(line, delimiter) == 0)
+		{
+			free(line);
+			break;
+		}
+		
+		// Expand variables in heredoc line if not single quoted delimiter
+		if (ft_strchr(delimiter, '\'') == NULL)
+		{
+			expanded_line = expand_variables(line, mini->last_exit_status, mini->env);
+			free(line);
+			line = expanded_line;
+		}
+		
+		ft_putstr_fd(line, pipe_fds[1]);
+		ft_putstr_fd("\n", pipe_fds[1]);
+		free(line);
+		line_count++;
+	}
+	
+	close(pipe_fds[1]);
+	if (dup2(pipe_fds[0], STDIN_FILENO) == -1)
+	{
+		close(pipe_fds[0]);
+		perror("minishell: dup2");
+		return (-1);
+	}
+	close(pipe_fds[0]);
+	return (0);
 }
 
 // Applies all redirections in a command
@@ -249,6 +249,25 @@ static char **extract_command_args(t_node *tokens)
 	}
 	args[i] = NULL;
 	return (args);
+}
+
+static t_node	*extract_command_token(t_node *tokens)
+{
+	t_node	*current;
+	t_node	*head;
+	t_node	*new_token;
+
+	head = NULL;
+	current = tokens;
+	while (current && (current->type == CMD || current->type == ARG))
+	{
+		new_token = create_token(current->data, current->type);
+		if (!new_token)
+			return (free_list(head), NULL);
+		add_token(&head, new_token);
+		current = current->next;
+	}
+	return (head);
 }
 
 // Creates a copy of a token list from start to end (not including end)
@@ -540,18 +559,18 @@ int execute_pipeline(t_mini *mini, t_node *tokens)
 			return (1);
 		}
 		
-		// Execute builtin
-		exit_status = execute_builtin(mini, commands[0]);
-		
 		// Restore original stdin and stdout
 		dup2(stdin_copy, STDIN_FILENO);
 		dup2(stdout_copy, STDOUT_FILENO);
 		close(stdin_copy);
 		close(stdout_copy);
 		
+		// Execute builtin
+		t_node *token = extract_command_token(commands[0]);
 		// Free allocated memory
-		free_list(commands[0]);
+		free_list(*commands);
 		free(commands);
+		exit_status = execute_builtin(mini, token);
 		
 		return (exit_status);
 	}
@@ -620,8 +639,9 @@ int execute_pipeline(t_mini *mini, t_node *tokens)
 			// Execute command
 			if (commands[i] && commands[i]->type == CMD)
 			{
+				t_node *token = extract_command_token(commands[i]);
 				if (is_builtin(commands[i]->data))
-					exit(execute_builtin(mini, commands[i]));
+					exit(execute_builtin(mini, token));
 				else
 				{
 					char **args = extract_command_args(commands[i]);
@@ -636,7 +656,7 @@ int execute_pipeline(t_mini *mini, t_node *tokens)
 					free(args);
 					free_env(mini->env);
 					free_list(*commands);
-					free(commands);
+					// free(commands);
 					exit(exit_status);
 				}
 			}
@@ -655,7 +675,7 @@ int execute_pipeline(t_mini *mini, t_node *tokens)
 				free(args);
 				free_env(mini->env);
 				free_list(*commands);
-				free(commands);
+				// free(commands);
 				exit(exit_status);
 			}
 			else
