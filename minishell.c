@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/03/26 13:57:27 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/03/27 18:06:11 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,11 @@ int	main(int ac, char **av, char **env)
 
 	setup_signals();
 	mini.last_exit_status = 0;
-	init_mini(&mini, env);
 	if (ac != 1 && av && env)
 		return (printf("No arguments needed\n"), 1);
 	while (1)
 	{
+		init_mini(&mini, env);
 		mini.str = readline("minishell$ ");
 		if (!mini.str)
 		{

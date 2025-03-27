@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 11:00:23 by calleaum          #+#    #+#             */
-/*   Updated: 2025/03/19 12:26:19 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/03/27 17:34:16 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,24 @@ void	free_env_list(t_env_node *head)
 	}
 }
 
-void	free_listenv(t_mini *mini, t_node *list)
+void	free_all(t_mini *mini, t_node **commands, char **args, int cmd_count)
 {
-	free_list(list);
+	int	i;
+	int	j;
+
+	i = -1;
+	j = -1;
 	free_env(mini->env);
+	if (commands)
+	{
+		while (++i < cmd_count && commands[i])
+			free_list(commands[i]);
+		free(commands);
+	}
+	if (args)
+	{
+		while (args[++j])
+			free(args[j]);
+		free(args);
+	}
 }

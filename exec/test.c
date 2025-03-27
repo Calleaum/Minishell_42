@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:22:40 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/03/26 14:00:37 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/03/27 18:10:46 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -374,17 +374,8 @@ static int execute_builtin(t_mini *mini, t_node *tokens)
 	else if (!ft_strcmp(tokens->data, "env"))
 		return (ft_env(mini, tokens));
 	else if (!ft_strcmp(tokens->data, "exit"))
-		ft_exit(mini, tokens);
+		ft_exit(tokens);
 	return (0);
-}
-
-// Checks if command is a builtin
-static int is_builtin(char *cmd)
-{
-	return (!ft_strcmp(cmd, "echo") || !ft_strcmp(cmd, "cd") ||
-			!ft_strcmp(cmd, "pwd") || !ft_strcmp(cmd, "export") ||
-			!ft_strcmp(cmd, "unset") || !ft_strcmp(cmd, "env") ||
-			!ft_strcmp(cmd, "exit"));
 }
 
 // Helper function to find the path of a command
@@ -503,6 +494,7 @@ static int execute_external_command(t_mini *mini, char **args)
 		if (execve(path, args, mini->env->env_vars) == -1)
 		{
 			perror("minishell: execve");
+			free_env(mini->env);
 			exit(1);
 		}
 	}
@@ -530,53 +522,21 @@ int execute_pipeline(t_mini *mini, t_node *tokens)
 	int status;
 	int exit_status;
 	
-	// Split the token list into separate commands
 	commands = split_commands(tokens, &cmd_count);
 	free_list(tokens);
-	if (!commands)
-		return (1);
-	
-	// No need to fork if there's only one command and it's a builtin
-	if (cmd_count == 1 && commands[0] && commands[0]->type == CMD && 
-		is_builtin(commands[0]->data))
+	if (cmd_count == 1 && commands[0] && commands[0]->type == CMD)
 	{
-		// Save original stdin and stdout
-		int stdin_copy = dup(STDIN_FILENO);
-		int stdout_copy = dup(STDOUT_FILENO);
-		
-		// Apply redirections
 		if (apply_redirections(commands[0], mini) != 0)
-		{
-			// Restore original stdin and stdout
-			dup2(stdin_copy, STDIN_FILENO);
-			dup2(stdout_copy, STDOUT_FILENO);
-			close(stdin_copy);
-			close(stdout_copy);
-			
-			// Free allocated memory
-			free_list(commands[0]);
-			free(commands);
-			return (1);
-		}
-		
-		// Restore original stdin and stdout
-		dup2(stdin_copy, STDIN_FILENO);
-		dup2(stdout_copy, STDOUT_FILENO);
-		close(stdin_copy);
-		close(stdout_copy);
-		
-		// Execute builtin
+			return (free_list(commands[0]), free(commands), 1);
 		t_node *token = extract_command_token(commands[0]);
-		// Free allocated memory
-		free_list(*commands);
-		free(commands);
+		free_all(mini, commands, NULL, cmd_count);
 		exit_status = execute_builtin(mini, token);
-		
+		free_list(token);
 		return (exit_status);
 	}
-	
+	i = 0;
 	// Execute commands with pipes
-	for (i = 0; i < cmd_count; i++)
+	while(i < cmd_count)
 	{
 		// Create pipe for next command (if not last command)
 		if (i < cmd_count - 1)
@@ -591,7 +551,6 @@ int execute_pipeline(t_mini *mini, t_node *tokens)
 				return (1);
 			}
 		}
-		
 		pid = fork();
 		if (pid == -1)
 		{
@@ -607,7 +566,6 @@ int execute_pipeline(t_mini *mini, t_node *tokens)
 		else if (pid == 0)
 		{
 			// Child process
-			
 			// Connect to previous pipe's read end (if not first command)
 			if (i > 0)
 			{
@@ -619,7 +577,6 @@ int execute_pipeline(t_mini *mini, t_node *tokens)
 				close(pipe_fds[(i - 1) % 2][0]);
 				close(pipe_fds[(i - 1) % 2][1]);
 			}
-			
 			// Connect to current pipe's write end (if not last command)
 			if (i < cmd_count - 1)
 			{
@@ -631,51 +588,25 @@ int execute_pipeline(t_mini *mini, t_node *tokens)
 				close(pipe_fds[i % 2][0]);
 				close(pipe_fds[i % 2][1]);
 			}
-			
 			// Apply redirections
 			if (apply_redirections(commands[i], mini) != 0)
 				exit(1);
-			
 			// Execute command
 			if (commands[i] && commands[i]->type == CMD)
 			{
 				t_node *token = extract_command_token(commands[i]);
-				if (is_builtin(commands[i]->data))
-					exit(execute_builtin(mini, token));
-				else
-				{
-					char **args = extract_command_args(commands[i]);
-					if (!args)
-						exit(1);
-					
-					exit_status = execute_external_command(mini, args);
-					
-					// Free args
-					for (int j = 0; args[j]; j++)
-						free(args[j]);
-					free(args);
-					free_env(mini->env);
-					free_list(*commands);
-					// free(commands);
-					exit(exit_status);
-				}
+				free_all(mini, commands, NULL, cmd_count);
+				execute_builtin(mini, token);
+				free_list(token);
+				exit(0);
 			}
 			else if (commands[i] && commands[i]->type == ARG)
 			{
-				// Command is just an argument, treat it as external command
 				char **args = extract_command_args(commands[i]);
 				if (!args)
 					exit(1);
-				
 				exit_status = execute_external_command(mini, args);
-				
-				// Free args
-				for (int j = 0; args[j]; j++)
-					free(args[j]);
-				free(args);
-				free_env(mini->env);
-				free_list(*commands);
-				// free(commands);
+				free_all(mini, commands, args, cmd_count);
 				exit(exit_status);
 			}
 			else
@@ -684,46 +615,32 @@ int execute_pipeline(t_mini *mini, t_node *tokens)
 				exit(0);
 			}
 		}
-		
-		// Parent process
-		
 		// Close previous pipe's read and write ends
 		if (i > 0)
 		{
 			close(pipe_fds[(i - 1) % 2][0]);
 			close(pipe_fds[(i - 1) % 2][1]);
 		}
+		i++;
 	}
-	
 	// Close the last pipe if there was one
 	if (cmd_count > 1)
 	{
 		close(pipe_fds[(cmd_count - 2) % 2][0]);
 		close(pipe_fds[(cmd_count - 2) % 2][1]);
 	}
-	
 	// Wait for all child processes
 	exit_status = 0;
-	for (i = 0; i < cmd_count; i++)
+	i = -1;
+	while (++i < cmd_count)
 	{
 		waitpid(-1, &status, 0);
 		if (WIFEXITED(status))
-		{
 			exit_status = WEXITSTATUS(status);
-		}
 		else if (WIFSIGNALED(status))
-		{
 			exit_status = 128 + WTERMSIG(status);
-		}
 	}
-	
-	// Free all commands
-	for (i = 0; i < cmd_count; i++)
-		free_list(commands[i]);
-	free(commands);
-	
-	// Set last exit status
+	free_all(mini, commands, NULL, cmd_count);
 	mini->last_exit_status = exit_status;
-	
 	return (exit_status);
 }

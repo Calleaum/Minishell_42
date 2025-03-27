@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/03/25 15:35:51 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/03/27 17:34:11 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,9 +117,7 @@ int			ft_cd(t_mini *mini, t_node *list);
 int			handle_cd_error(char *path);
 
 // exit //
-void		ft_exit(t_mini *mini, t_node *list);
-void		clean(t_mini *mini);
-void		free_listenv(t_mini *mini, t_node *list);
+void		ft_exit(t_node *list);
 
 // pwd //
 int			ft_pwd(t_mini *mini);
@@ -168,4 +166,6 @@ void		init_mini(t_mini *mini, char **envp);
 int			ft_varlen(char *str);
 int			ft_isspace(char c);
 int			isdigit_str(char *str);
+void		free_all(t_mini *mini, t_node **commands, char **args, int cmd_count);
+
 #endif
