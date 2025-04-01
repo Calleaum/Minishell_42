@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/01 16:56:48 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/01 17:23:22 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,30 +132,33 @@ int	main(int ac, char **av, char **env)
 			free(mini.str);
 			continue ;
 		}
-		char *oui = expand_variables(mini.str, mini.last_exit_status, mini.env);
-		if (*oui == '\0')
+		char *str = expand_variables(mini.str, mini.last_exit_status, mini.env);
+		if (*str == '\0')
 		{
-			free(oui);
+			free(str);
 			free(mini.str);
 			continue ;
 		}
 		g_signal = 0;
 		free(mini.str);
-		list = tokenize_input(oui, &mini);
+		list = tokenize_input(str, &mini);
+		free(str);
+		if (*list->data == '\0')
+		{
+			free_list(list);
+			write(2, "minishell: : command not found\n", 31);
+			continue ;
+		}
 		if (check_pipe_syntax(list))
 		{
-			free(oui);
 			free_list(list);
 			continue ;
 		}
 		if (check_redir_syntax(list))
 		{
-			free(oui);
 			free_list(list);
 			continue ;
 		}
-		free(oui);
 		execute_pipeline(&mini, list);
-		// free_list(list);
 	}
 }
