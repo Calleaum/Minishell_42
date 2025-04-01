@@ -18,9 +18,8 @@ SRC =	minishell.c \
 		env/update_env.c \
 		utils/utils.c \
 		utils/utils2.c \
-		utils/unset/utils_unset.c \
-		utils/cd/utils_cd.c \
-		utils/export/utils_export.c \
+		utils/utils_unset.c \
+		utils/utils_export.c \
 		free.c \
 		exec/test.c
 

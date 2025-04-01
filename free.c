@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 11:00:23 by calleaum          #+#    #+#             */
-/*   Updated: 2025/03/27 17:34:16 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/01 09:06:42 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ static void	free_env_vars(char **env_vars)
 {
 	int	i;
 
+	if (!env_vars)
+		return ;
 	i = 0;
 	while (env_vars[i] != NULL)
 	{
@@ -46,14 +48,13 @@ void	free_env_list(t_env_node *head)
 	}
 }
 
-void	free_all(t_mini *mini, t_node **commands, char **args, int cmd_count)
+void	free_all(t_node **commands, char **args, int cmd_count)
 {
 	int	i;
 	int	j;
 
 	i = -1;
 	j = -1;
-	free_env(mini->env);
 	if (commands)
 	{
 		while (++i < cmd_count && commands[i])

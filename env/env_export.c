@@ -6,7 +6,7 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 10:11:58 by calleaum          #+#    #+#             */
-/*   Updated: 2025/03/18 12:11:16 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/03/31 15:05:57 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,11 @@ static int	find_env_var_index(t_env *env, const char *var_name)
 			env_name = extract_var_name(env->env_vars[i], env_equals);
 			if (!env_name)
 				return (-1);
-			if (strcmp(env_name, var_name) == 0)
+			if (ft_conststrcmp(env_name, var_name) == 0)
 				return (free(env_name), i);
 			free(env_name);
 		}
-		else if (strcmp(env->env_vars[i], var_name) == 0)
+		else if (ft_conststrcmp(env->env_vars[i], var_name) == 0)
 			return (i);
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 15:10:17 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/03/25 17:21:21 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/03/31 15:24:41 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,14 @@ void	display_tokens(t_node *head)
 			current->data);
 		current = current->next;
 	}
+}
+
+int	ft_conststrcmp(char *s1, const char *s2)
+{
+	int	i;
+
+	i = 0;
+	while (s1[i] == s2[i] && s1[i] != '\0' && s2[i] != '\0')
+		i++;
+	return (s1[i] - s2[i]);
 }

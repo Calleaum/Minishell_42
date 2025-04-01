@@ -6,7 +6,7 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 10:32:40 by calleaum          #+#    #+#             */
-/*   Updated: 2025/03/25 08:58:25 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/03/31 14:58:28 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,13 @@ int	init_export_var(char *arg, char *var_name, int *name_len)
 	if (equals != NULL)
 		*name_len = equals - arg;
 	else
-		*name_len = strlen(arg);
+		*name_len = ft_strlen(arg);
 	if (*name_len >= var_name_size - 1)
 		*name_len = var_name_size - 1;
 	ft_memset(var_name, 0, var_name_size);
 	if (!validate_var_name(arg, *name_len))
 	{
-		printf("export: '%s': not a valid identifier\n", arg);
+		fd_printf(2, "export: '%s': not a valid identifier\n", arg);
 		return (0);
 	}
 	str_n_copy(var_name, arg, *name_len);
@@ -58,7 +58,7 @@ int	handle_export_arg(t_mini *mini, char *arg)
 
 	if (!init_export_var(arg, var_name, &name_len))
 		return (mini->last_exit_status = 1, 0);
-	equals = strchr(arg, '=');
+	equals = ft_strchr(arg, '=');
 	if (equals == NULL)
 	{
 		if (!var_exists(mini->env, var_name))

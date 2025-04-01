@@ -6,11 +6,11 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 15:30:11 by calleaum          #+#    #+#             */
-/*   Updated: 2025/03/18 12:14:55 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/01 10:46:15 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
+#include "../minishell.h"
 
 int	check_env_match(char *env_var, const char *var_name)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 08:43:49 by calleaum          #+#    #+#             */
-/*   Updated: 2025/03/17 17:12:03 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/03/31 15:25:53 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,14 @@ int	ft_env(t_mini *mini, t_node *args)
 
 	if (!mini || !mini->env || !mini->env->env_vars)
 	{
-		printf("env: environment not found\n");
+		fd_printf(2, "env: environment not found\n");
 		mini->last_exit_status = 1;
 		return (1);
 	}
 	if (args && args->next)
 	{
-		printf("env: '%s': No such file or directory\n", args->next->data);
+		fd_printf(2, "env: '%s': No such file or directory\n",
+			args->next->data);
 		mini->last_exit_status = 127;
 		return (127);
 	}

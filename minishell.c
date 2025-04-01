@@ -6,31 +6,66 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/03/27 18:06:11 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/01 16:56:48 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// void	handle_command(t_mini *mini, t_node *list)
-// {
-// 	if (!ft_strncmp(list->data, "exit", INT_MAX))
-// 		ft_exit(mini, list);
-// 	else if (!ft_strncmp(list->data, "echo", INT_MAX))
-// 		ft_echo(mini, list->next);
-// 	else if (!ft_strncmp(list->data, "cd", INT_MAX))
-// 		ft_cd(mini, list);
-// 	else if (!ft_strncmp(list->data, "pwd", INT_MAX))
-// 		ft_pwd(mini);
-// 	else if (!ft_strncmp(list->data, "env", INT_MAX))
-// 		ft_env(mini, list);
-// 	else if (!ft_strncmp(list->data, "export", INT_MAX))
-// 		ft_export(mini, list);
-// 	else if (!ft_strncmp(list->data, "unset", INT_MAX))
-// 		ft_unset(mini, list);
-// 	else
-// 		ft_printf("%s: command not found\n", list->data);
-// }
+pid_t	g_signal = 0;
+
+static int	check_redir_syntax(t_node *list)
+{
+	t_node	*temp;
+
+	temp = list;
+	while (temp && temp->next)
+	{
+		if (temp->type == INPUT_FILE || temp->type == HEREDOC
+			|| temp->type == OUTPUT_TRUNC || temp->type == OUTPUT_APPEND)
+		{
+			if (temp->next->type == INPUT_FILE || temp->next->type == HEREDOC
+				|| temp->next->type == OUTPUT_TRUNC
+				|| temp->next->type == OUTPUT_APPEND)
+				return (fd_printf(2
+						, "minishell: error near unexpected token `%s'\n"
+						, temp->next->data), 1);
+		}
+		temp = temp->next;
+	}
+	if (!temp->next && (temp->type == INPUT_FILE || temp->type == HEREDOC
+			|| temp->type == OUTPUT_TRUNC || temp->type == OUTPUT_APPEND))
+		return (fd_printf(2
+				, "minishell: error near unexpected token `newline'\n"), 1);
+	return (0);
+}
+
+static int	check_pipe_syntax(t_node *list)
+{
+	t_node	*temp;
+
+	temp = list;
+	if (temp->type == PIPE)
+		return (fd_printf(2, MSG), 1);
+	while (temp && temp->next && temp->next->next)
+	{
+		if (temp->next->type == PIPE && (temp->type == INPUT_FILE
+				|| temp->type == HEREDOC || temp->type == OUTPUT_TRUNC
+				|| temp->type == OUTPUT_APPEND))
+			return (fd_printf(2, MSG), 1);
+		if (temp->type == PIPE && (temp->next->type == OUTPUT_TRUNC
+				|| temp->next->type == HEREDOC || temp->next->type == INPUT_FILE
+				|| temp->next->type == OUTPUT_APPEND))
+			if (temp->next->next->type != CMD && temp->next->next->type != ARG)
+				return (fd_printf(2, MSG), 1);
+		temp = temp->next;
+	}
+	while (temp && temp->next)
+		temp = temp->next;
+	if (temp->type == PIPE)
+		return (fd_printf(2, MSG), 1);
+	return (0);
+}
 
 static int	empty_line(char *line)
 {
@@ -74,13 +109,13 @@ int	main(int ac, char **av, char **env)
 	t_mini	mini;
 	t_node	*list;
 
-	setup_signals();
+	init_mini(&mini, env);
 	mini.last_exit_status = 0;
 	if (ac != 1 && av && env)
 		return (printf("No arguments needed\n"), 1);
 	while (1)
 	{
-		init_mini(&mini, env);
+		set_sig_interactive();
 		mini.str = readline("minishell$ ");
 		if (!mini.str)
 		{
@@ -102,13 +137,25 @@ int	main(int ac, char **av, char **env)
 		{
 			free(oui);
 			free(mini.str);
-			continue;
+			continue ;
 		}
+		g_signal = 0;
 		free(mini.str);
 		list = tokenize_input(oui, &mini);
+		if (check_pipe_syntax(list))
+		{
+			free(oui);
+			free_list(list);
+			continue ;
+		}
+		if (check_redir_syntax(list))
+		{
+			free(oui);
+			free_list(list);
+			continue ;
+		}
 		free(oui);
 		execute_pipeline(&mini, list);
-		// handle_command(&mini, list);
 		// free_list(list);
 	}
 }

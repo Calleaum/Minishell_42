@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/03/27 17:34:11 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/01 16:54:44 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include <stdbool.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <dirent.h>
 
 typedef struct s_node
 {
@@ -80,6 +81,8 @@ typedef struct s_expand
 	int		in_quote;
 }	t_expand;
 
+extern pid_t g_signal;
+
 // Token types
 # define INPUT_FILE 1
 # define HEREDOC 2
@@ -89,6 +92,9 @@ typedef struct s_expand
 # define CMD 6
 # define ARG 7
 
+# define MSG "minishell: error near unexpected token `|'\n"
+
+int	ft_conststrcmp(char *s1, const char *s2);
 int			execute_pipeline(t_mini *mini, t_node *tokens);
 
 // list //
@@ -107,7 +113,9 @@ t_node		*tokenize_input(char *input, t_mini *n);
 void		display_tokens(t_node *head);
 
 // ctrl //
-void		setup_signals(void);
+// void		setup_signals(void);
+void	set_sig_interactive(void);
+void	set_sig_executing(void);
 
 // echo //
 void		ft_echo(t_mini *mini, t_node *args);
@@ -117,7 +125,7 @@ int			ft_cd(t_mini *mini, t_node *list);
 int			handle_cd_error(char *path);
 
 // exit //
-void		ft_exit(t_node *list);
+void		ft_exit(t_mini *mini, t_node *list);
 
 // pwd //
 int			ft_pwd(t_mini *mini);
@@ -166,6 +174,6 @@ void		init_mini(t_mini *mini, char **envp);
 int			ft_varlen(char *str);
 int			ft_isspace(char c);
 int			isdigit_str(char *str);
-void		free_all(t_mini *mini, t_node **commands, char **args, int cmd_count);
+void		free_all(t_node **commands, char **args, int cmd_count);
 
 #endif

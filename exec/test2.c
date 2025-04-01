@@ -1,17 +1,7 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   test.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/20 19:22:40 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/01 13:14:43 by lgrisel          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "../minishell.h"
-
+Pasted content
+12.84 KB •637 lines
+•
+Formatting may be inconsistent from source
 // Opens input file for redirection
 static int handle_input_file(char *filename)
 {
@@ -87,81 +77,49 @@ static int handle_output_append(char *filename)
 // Handles heredoc redirection
 static int handle_heredoc(char *delimiter, t_mini *mini)
 {
-	int     pipe_fds[2];
-	char    *line;
-	char    *expanded_line;
-	int     line_count = 0;
-	
-	// Set a reasonable maximum for heredoc input (e.g., 16 lines)
-	// const int MAX_HEREDOC_LINES = 16;
-	
-	if (pipe(pipe_fds) == -1)
-	{
-		perror("minishell: pipe");
-		return (-1);
-	}
-	
-	// Install signal handler for SIGINT
-	
-	while (1)
-	{
-		set_sig_executing();
-		if (g_signal == 130) 
-		{
-			set_sig_interactive();
-			break;
-		}
-		// Prevent infinite or very large heredoc
-		// if (line_count >= MAX_HEREDOC_LINES)
-		// {
-		//     ft_putstr_fd("\nminishell: warning: here-document delimited by end-of-file\n", 2);
-		//     break;
-		// }
-		
-		ft_putstr_fd("> ", 1);
-		line = get_next_line(0);
-		
-		// Handle EOF or read error
-		if (!line)
-		{
-			ft_putstr_fd("\nminishell: warning: here-document delimited by end-of-file\n", 2);
-			break;
-		}
-		
-		// Remove newline character if present
-		if (line[ft_strlen(line) - 1] == '\n')
-			line[ft_strlen(line) - 1] = '\0';
-		
-		// Check delimiter
-		if (ft_strcmp(line, delimiter) == 0)
-		{
-			free(line);
-			break;
-		}
-		
-		// Expand variables in heredoc line if not single quoted delimiter
-		if (ft_strchr(delimiter, '\'') == NULL)
-		{
-			expanded_line = expand_variables(line, mini->last_exit_status, mini->env);
-			free(line);
-			line = expanded_line;
-		}
-		
-		ft_putstr_fd(line, pipe_fds[1]);
-		ft_putstr_fd("\n", pipe_fds[1]);
-		free(line);
-		line_count++;
-	}
-	
-	close(pipe_fds[1]);
-	if (dup2(pipe_fds[0], STDIN_FILENO) == -1)
-	{
-		close(pipe_fds[0]);
-		perror("minishell: dup2");
-		return (-1);
-	}
-	close(pipe_fds[0]);
-	return (0);
+    int     pipe_fds[2];
+    char    *line;
+    char    *expanded_line;
+    
+    if (pipe(pipe_fds) == -1)
+    {
+        perror("minishell: pipe");
+        return (-1);
+    }
+    while (1)
+    {
+        ft_putstr_fd("> ", 1);
+        line = get_next_line(0); // Assuming you have get_next_line function
+        if (!line)
+            break;
+        // Remove newline character if present
+        if (line[ft_strlen(line) - 1] == '\n')
+            line[ft_strlen(line) - 1] = '\0';
+        if (ft_strcmp(line, delimiter) == 0)
+        {
+            free(line);
+            break;
+        }
+        // Expand variables in heredoc line if not single quoted delimiter
+        if (ft_strchr(delimiter, '\'') == NULL)
+        {
+            expanded_line = expand_variables(line, mini->last_exit_status, mini->env);
+            free(line);
+            line = expanded_line;
+        }
+        ft_putstr_fd(line, pipe_fds[1]);
+        ft_putstr_fd("\n", pipe_fds[1]);
+        free(line);
+    }
+    close(pipe_fds[1]);
+    if (dup2(pipe_fds[0], STDIN_FILENO) == -1)
+    {
+        close(pipe_fds[0]);
+        perror("minishell: dup2");
+        return (-1);
+    }
+    close(pipe_fds[0]);
+    return (0);
 }
 
 // Applies all redirections in a command
@@ -220,12 +178,8 @@ static char **extract_command_args(t_node *tokens)
 	while (current)
 	{
 		if (current->type == CMD || current->type == ARG)
-		{
 			count++;
-			current = current->next;
-		}
-		else
-			break ;
+		current = current->next;
 	}
 	
 	// Allocate memory for args array
@@ -255,25 +209,6 @@ static char **extract_command_args(t_node *tokens)
 	}
 	args[i] = NULL;
 	return (args);
-}
-
-static t_node	*extract_command_token(t_node *tokens)
-{
-	t_node	*current;
-	t_node	*head;
-	t_node	*new_token;
-
-	head = NULL;
-	current = tokens;
-	while (current && (current->type == CMD || current->type == ARG))
-	{
-		new_token = create_token(current->data, current->type);
-		if (!new_token)
-			return (free_list(head), NULL);
-		add_token(&head, new_token);
-		current = current->next;
-	}
-	return (head);
 }
 
 // Creates a copy of a token list from start to end (not including end)
@@ -368,8 +303,8 @@ static t_node **split_commands(t_node *tokens, int *cmd_count)
 static int execute_builtin(t_mini *mini, t_node *tokens)
 {
 	if (!ft_strcmp(tokens->data, "echo"))
-		ft_echo(mini, tokens->next);
-	if (!ft_strcmp(tokens->data, "cd"))
+		ft_echo(tokens->next);
+	else if (!ft_strcmp(tokens->data, "cd"))
 		return (ft_cd(mini, tokens));
 	else if (!ft_strcmp(tokens->data, "pwd"))
 		return (ft_pwd(mini));
@@ -381,7 +316,17 @@ static int execute_builtin(t_mini *mini, t_node *tokens)
 		return (ft_env(mini, tokens));
 	else if (!ft_strcmp(tokens->data, "exit"))
 		ft_exit(mini, tokens);
+	
 	return (0);
+}
+
+// Checks if command is a builtin
+static int is_builtin(char *cmd)
+{
+	return (!ft_strcmp(cmd, "echo") || !ft_strcmp(cmd, "cd") ||
+			!ft_strcmp(cmd, "pwd") || !ft_strcmp(cmd, "export") ||
+			!ft_strcmp(cmd, "unset") || !ft_strcmp(cmd, "env") ||
+			!ft_strcmp(cmd, "exit"));
 }
 
 // Helper function to find the path of a command
@@ -445,65 +390,32 @@ static char *find_command_path(char *cmd, t_mini *mini)
 	return (NULL);
 }
 
-
-static void	print_command_not_found(const char *cmd)
-{
-	char		buffer[256];
-	int			i;
-	int			j;
-	const char	*prefix;
-	const char	*suffix;
-
-	i = -1;
-	prefix = "minishell: ";
-	while (prefix[++i])
-		buffer[i] = prefix[i];
-	j = -1;
-	while (cmd[++j] && i < 250) 
-	{
-		buffer[i] = cmd[j];
-		i++;
-	}
-	suffix = ": command not found\n";
-	j = -1;
-	while (suffix[++j] && i < 255)
-	{
-		buffer[i] = suffix[j];
-		i++;
-	}
-	buffer[i] = '\0';
-	write(2, buffer, i);
-}
-
 // Executes an external command
 static int execute_external_command(t_mini *mini, char **args)
 {
 	char *path;
 	pid_t pid;
 	int status;
-	DIR *dir;
 	
 	path = find_command_path(args[0], mini);
 	if (!path)
-		return (free_env(mini->env), print_command_not_found(args[0]), 127);
-	dir = opendir(path);
-	if (dir != NULL)
 	{
-		closedir(dir);
-		fd_printf(2, "minishell: %s: Is a directory\n", path);
-		free(path);
-		return 1;
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(args[0], 2);
+		ft_putstr_fd(": command not found\n", 2);
+		return (127);
 	}
+	
 	pid = fork();
 	if (pid == -1)
 	{
 		perror("minishell: fork");
-		free_env(mini->env);
 		free(path);
 		return (1);
 	}
 	else if (pid == 0)
 	{
+		// Child process
 		if (execve(path, args, mini->env->env_vars) == -1)
 		{
 			perror("minishell: execve");
@@ -512,16 +424,18 @@ static int execute_external_command(t_mini *mini, char **args)
 	}
 	else
 	{
+		// Parent process
 		waitpid(pid, &status, 0);
 		free(path);
 		if (WIFEXITED(status))
-			return (free_env(mini->env), WEXITSTATUS(status));
+			return (WEXITSTATUS(status));
 		else
-			return (free_env(mini->env), 1);
+			return (1);
 	}
 	return (0);
 }
 
+// Main function to handle pipes and execute commands
 int execute_pipeline(t_mini *mini, t_node *tokens)
 {
 	int cmd_count;
@@ -531,71 +445,84 @@ int execute_pipeline(t_mini *mini, t_node *tokens)
 	pid_t pid;
 	int status;
 	int exit_status;
-	t_node *token;
-
+	
+	// Split the token list into separate commands
 	commands = split_commands(tokens, &cmd_count);
-	free_list(tokens);
 	if (!commands)
-		return 1;
+		return (1);
+	
+	// No need to fork if there's only one command and it's a builtin
 	if (cmd_count == 1 && commands[0] && commands[0]->type == CMD)
 	{
+		// Save original stdin and stdout
 		int stdin_copy = dup(STDIN_FILENO);
 		int stdout_copy = dup(STDOUT_FILENO);
+		
+		// Apply redirections
 		if (apply_redirections(commands[0], mini) != 0)
 		{
+			// Restore original stdin and stdout
 			dup2(stdin_copy, STDIN_FILENO);
 			dup2(stdout_copy, STDOUT_FILENO);
 			close(stdin_copy);
 			close(stdout_copy);
-
+			
+			// Free allocated memory
 			free_list(commands[0]);
 			free(commands);
-			return 1;
+			return (1);
 		}
-		token = extract_command_token(commands[0]);
-		free_all(commands, NULL, cmd_count);
-		exit_status = execute_builtin(mini, token);
+		
+		// Execute builtin
+		exit_status = execute_builtin(mini, commands[0]);
+		
+		// Restore original stdin and stdout
 		dup2(stdin_copy, STDIN_FILENO);
 		dup2(stdout_copy, STDOUT_FILENO);
 		close(stdin_copy);
 		close(stdout_copy);
-		free_list(token);
+		
+		// Free allocated memory
+		free_list(commands[0]);
+		free(commands);
+		
 		return (exit_status);
 	}
-	i = 0;
-	while(i < cmd_count)
+	
+	// Execute commands with pipes
+	for (i = 0; i < cmd_count; i++)
 	{
+		// Create pipe for next command (if not last command)
 		if (i < cmd_count - 1)
 		{
 			if (pipe(pipe_fds[i % 2]) == -1)
 			{
 				perror("minishell: pipe");
+				// Free remaining commands
 				while (i < cmd_count)
 					free_list(commands[i++]);
 				free(commands);
 				return (1);
 			}
 		}
+		
 		pid = fork();
 		if (pid == -1)
 		{
 			perror("minishell: fork");
-			if (i < cmd_count -1 )
-			{
-				close(pipe_fds[i % 2][0]);
-				close(pipe_fds[i % 2][1]);
-			}
+			// Close pipes and free remaining commands
+			close(pipe_fds[i % 2][0]);
+			close(pipe_fds[i % 2][1]);
 			while (i < cmd_count)
-			{
-				if (commands[i])
-					free_list(commands[i]);
-				i++;
-			}
+				free_list(commands[i++]);
 			free(commands);
 			return (1);
 		}
 		else if (pid == 0)
 		{
+			// Child process
+			
+			// Connect to previous pipe's read end (if not first command)
 			if (i > 0)
 			{
 				if (dup2(pipe_fds[(i - 1) % 2][0], STDIN_FILENO) == -1)
@@ -606,6 +533,8 @@ int execute_pipeline(t_mini *mini, t_node *tokens)
 				close(pipe_fds[(i - 1) % 2][0]);
 				close(pipe_fds[(i - 1) % 2][1]);
 			}
+			
+			// Connect to current pipe's write end (if not last command)
 			if (i < cmd_count - 1)
 			{
 				if (dup2(pipe_fds[i % 2][1], STDOUT_FILENO) == -1)
@@ -616,55 +545,96 @@ int execute_pipeline(t_mini *mini, t_node *tokens)
 				close(pipe_fds[i % 2][0]);
 				close(pipe_fds[i % 2][1]);
 			}
+			
+			// Apply redirections
 			if (apply_redirections(commands[i], mini) != 0)
 				exit(1);
+			
+			// Execute command
 			if (commands[i] && commands[i]->type == CMD)
 			{
-				token = extract_command_token(commands[i]);
-				free_all(commands, NULL, cmd_count);
-				exit_status = execute_builtin(mini, token);
-				free_env(mini->env);
-				free_list(token);
-				exit(exit_status);
+				if (is_builtin(commands[i]->data))
+				{
+					exit(execute_builtin(mini, commands[i]));
+				}
+				else
+				{
+					char **args = extract_command_args(commands[i]);
+					if (!args)
+						exit(1);
+					
+					exit_status = execute_external_command(mini, args);
+					
+					// Free args
+					for (int j = 0; args[j]; j++)
+						free(args[j]);
+					free(args);
+					
+					exit(exit_status);
+				}
 			}
 			else if (commands[i] && commands[i]->type == ARG)
 			{
+				// Command is just an argument, treat it as external command
 				char **args = extract_command_args(commands[i]);
 				if (!args)
 					exit(1);
+				
 				exit_status = execute_external_command(mini, args);
-				free_all(commands, args, cmd_count);
+				
+				// Free args
+				for (int j = 0; args[j]; j++)
+					free(args[j]);
+				free(args);
+				
 				exit(exit_status);
 			}
 			else
 			{
-				free_all(commands, NULL, cmd_count);
+				// Empty command or unknown type
 				exit(0);
 			}
 		}
+		
+		// Parent process
+		
+		// Close previous pipe's read and write ends
 		if (i > 0)
 		{
 			close(pipe_fds[(i - 1) % 2][0]);
 			close(pipe_fds[(i - 1) % 2][1]);
 		}
-		i++;
 	}
+	
+	// Close the last pipe if there was one
 	if (cmd_count > 1)
 	{
 		close(pipe_fds[(cmd_count - 2) % 2][0]);
 		close(pipe_fds[(cmd_count - 2) % 2][1]);
 	}
+	
+	// Wait for all child processes
 	exit_status = 0;
-	i = -1;
-	while (++i < cmd_count)
+	for (i = 0; i < cmd_count; i++)
 	{
 		waitpid(-1, &status, 0);
 		if (WIFEXITED(status))
+		{
 			exit_status = WEXITSTATUS(status);
+		}
 		else if (WIFSIGNALED(status))
+		{
 			exit_status = 128 + WTERMSIG(status);
+		}
 	}
-	free_all(commands, NULL, cmd_count);
+	
+	// Free all commands
+	for (i = 0; i < cmd_count; i++)
+		free_list(commands[i]);
+	free(commands);
+	
+	// Set last exit status
 	mini->last_exit_status = exit_status;
+	
 	return (exit_status);
 }

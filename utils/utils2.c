@@ -6,7 +6,7 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:08:02 by calleaum          #+#    #+#             */
-/*   Updated: 2025/03/19 12:32:03 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/01 10:50:53 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,14 @@ void	init_mini(t_mini *mini, char **envp)
 		printf("Error initializing environment.\n");
 		exit(1);
 	}
+}
+
+int	handle_cd_error(char *path)
+{
+	ft_putstr_fd("minishell: cd: ", 2);
+	ft_putstr_fd(path, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putstr_fd(strerror(errno), 2);
+	ft_putstr_fd("\n", 2);
+	return (1);
 }

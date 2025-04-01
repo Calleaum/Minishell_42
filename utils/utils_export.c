@@ -6,11 +6,11 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 10:00:02 by calleaum          #+#    #+#             */
-/*   Updated: 2025/03/18 12:13:59 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/01 10:46:17 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
+#include "../minishell.h"
 
 char	*str_n_copy(char *dest, const char *src, int n)
 {
@@ -71,7 +71,7 @@ int	var_exists(t_env *env, char *arg)
 	while (k < env->count)
 	{
 		check_var = env->env_vars[k];
-		equals = strchr(check_var, '=');
+		equals = ft_strchr(check_var, '=');
 		if (equals)
 		{
 			*equals = '\0';
