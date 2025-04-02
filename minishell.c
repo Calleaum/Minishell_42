@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/01 17:23:22 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/02 14:56:49 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,7 @@ int	main(int ac, char **av, char **env)
 		return (printf("No arguments needed\n"), 1);
 	while (1)
 	{
+		g_signal = 0;
 		set_sig_interactive();
 		mini.str = readline("minishell$ ");
 		if (!mini.str)
