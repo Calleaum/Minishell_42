@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/02 14:56:49 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/03 14:46:49 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,9 +115,8 @@ int	main(int ac, char **av, char **env)
 		return (printf("No arguments needed\n"), 1);
 	while (1)
 	{
-		g_signal = 0;
 		set_sig_interactive();
-		mini.str = readline("minishell$ ");
+			mini.str = readline("minishell$ ");
 		if (!mini.str)
 		{
 			free(mini.str);
@@ -133,17 +132,17 @@ int	main(int ac, char **av, char **env)
 			free(mini.str);
 			continue ;
 		}
-		char *str = expand_variables(mini.str, mini.last_exit_status, mini.env);
-		if (*str == '\0')
+		mini.strvar = expand_variables(mini.str, mini.last_exit_status, mini.env);
+		if (*mini.strvar == '\0')
 		{
-			free(str);
 			free(mini.str);
+			free(mini.strvar);
 			continue ;
 		}
 		g_signal = 0;
 		free(mini.str);
-		list = tokenize_input(str, &mini);
-		free(str);
+		list = tokenize_input(mini.strvar, &mini);
+		free(mini.strvar);
 		if (*list->data == '\0')
 		{
 			free_list(list);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:22:40 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/02 14:56:25 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/03 14:45:47 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,39 +91,35 @@ static int handle_heredoc(char *delimiter, t_mini *mini)
 	char    *line;
 	char    *expanded_line;
 	int     line_count = 0;
-
+	
 	if (pipe(pipe_fds) == -1)
 	{
 		perror("minishell: pipe");
 		return (-1);
 	}
-	
-	// Install signal handler for SIGINT
 	set_sig_executing();
 	while (1)
 	{
 		ft_putstr_fd("> ", 1);
 		line = get_next_line(0);
-		if (g_signal == 130)
-		{
-			// set_sig_interactive();
+		// fd_printf(2, "%d\n", g_signal);
+		if (g_signal == -1)
 			break;
-		}
-		// Handle EOF or read error
 		if (!line)
 		{
 			ft_putstr_fd("\nminishell: warning: here-document delimited by end-of-file\n", 2);
 			break;
 		}
-		// Remove newline character if present
 		if (line[ft_strlen(line) - 1] == '\n')
 			line[ft_strlen(line) - 1] = '\0';
+		
 		// Check delimiter
 		if (ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);
 			break;
 		}
+		
 		// Expand variables in heredoc line if not single quoted delimiter
 		if (ft_strchr(delimiter, '\'') == NULL)
 		{
@@ -131,11 +127,13 @@ static int handle_heredoc(char *delimiter, t_mini *mini)
 			free(line);
 			line = expanded_line;
 		}
+		
 		ft_putstr_fd(line, pipe_fds[1]);
 		ft_putstr_fd("\n", pipe_fds[1]);
 		free(line);
 		line_count++;
 	}
+	
 	close(pipe_fds[1]);
 	if (dup2(pipe_fds[0], STDIN_FILENO) == -1)
 	{

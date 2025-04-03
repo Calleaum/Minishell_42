@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:08:02 by calleaum          #+#    #+#             */
-/*   Updated: 2025/04/01 10:50:53 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/03 12:59:42 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ char	*ft_strcpy2(char *dest, const char *src)
 void	init_mini(t_mini *mini, char **envp)
 {
 	mini->str = NULL;
+	mini->strvar = NULL;
 	mini->last_exit_status = 0;
 	mini->count = 0;
 	mini->in_word = 0;

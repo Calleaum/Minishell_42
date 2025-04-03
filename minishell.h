@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/02 14:16:59 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/03 12:59:34 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ typedef struct s_env
 typedef struct s_mini
 {
 	char	*str;
+	char	*strvar;
 	int		last_exit_status;
 	int		i;
 	char	*current_token;
@@ -81,7 +82,7 @@ typedef struct s_expand
 	int		in_quote;
 }	t_expand;
 
-extern pid_t g_signal;
+extern pid_t	g_signal;
 
 // Token types
 # define INPUT_FILE 1
@@ -94,7 +95,7 @@ extern pid_t g_signal;
 
 # define MSG "minishell: error near unexpected token `|'\n"
 
-int	ft_conststrcmp(char *s1, const char *s2);
+int			ft_conststrcmp(char *s1, const char *s2);
 int			execute_pipeline(t_mini *mini, t_node *tokens);
 
 // list //
@@ -114,10 +115,8 @@ void		display_tokens(t_node *head);
 
 // ctrl //
 // void		setup_signals(void);
-void	set_sig_interactive(void);
-void set_sig_interactive2(void);
-
-void	set_sig_executing(void);
+void		set_sig_interactive(void);
+void		set_sig_executing(void);
 
 // echo //
 void		ft_echo(t_mini *mini, t_node *args);
