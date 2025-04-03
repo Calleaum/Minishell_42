@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/03 16:01:29 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/03 19:27:15 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ typedef struct s_env
 typedef struct s_mini
 {
 	char	*str;
-	char	*strvar;
+	char	*exp;
 	int		last_exit_status;
 	int		i;
 	char	*current_token;

@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:22:40 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/03 16:25:54 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/03 19:40:51 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -530,6 +530,11 @@ int execute_pipeline(t_mini *mini, t_node *tokens)
 			free_list(commands[0]);
 			free(commands);
 			return 1;
+		}
+		if (!ft_strcmp(commands[0]->data, "exit"))
+		{
+			close(stdin_copy);
+			close(stdout_copy);
 		}
 		token = extract_command_token(commands[0]);
 		free_all(commands, NULL, cmd_count);
