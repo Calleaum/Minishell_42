@@ -6,16 +6,16 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:22:40 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/03 19:40:51 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/03 20:14:27 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 // Opens input file for redirection
-static int handle_input_file(char *filename)
+static int	handle_input_file(char *filename)
 {
-	int fd;
+	int	fd;
 	
 	fd = open(filename, O_RDONLY);
 	if (fd == -1)
@@ -37,9 +37,9 @@ static int handle_input_file(char *filename)
 }
 
 // Opens output file for truncation redirection
-static int handle_output_trunc(char *filename)
+static int	handle_output_trunc(char *filename)
 {
-	int fd;
+	int	fd;
 	
 	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
@@ -61,9 +61,9 @@ static int handle_output_trunc(char *filename)
 }
 
 // Opens output file for append redirection
-static int handle_output_append(char *filename)
+static int	handle_output_append(char *filename)
 {
-	int fd;
+	int	fd;
 	
 	fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
@@ -85,12 +85,11 @@ static int handle_output_append(char *filename)
 }
 
 // Handles heredoc redirection
-static int handle_heredoc(char *delimiter, t_mini *mini)
+static int	handle_heredoc(char *delimiter, t_mini *mini)
 {
-	int     pipe_fds[2];
-	char    *line;
-	char    *expanded_line;
-	int     line_count = 0;
+	int		pipe_fds[2];
+	char	*line;
+	char	*expanded_line;
 	
 	if (pipe(pipe_fds) == -1)
 	{
@@ -100,25 +99,23 @@ static int handle_heredoc(char *delimiter, t_mini *mini)
 	set_sig_executing();
 	while (1)
 	{
-		ft_putstr_fd("> ", 1);
-		line = get_next_line(0);
+		// ft_putstr_fd("> ", 1);
+		// line = get_next_line(0);
+		line = readline(">");
 		if (g_signal == -1)
 			break;
 		if (!line)
 		{
-			ft_putstr_fd("\nminishell: warning: here-document delimited by end-of-file\n", 2);
+			ft_putstr_fd("minishell: warning: here-document delimited by end-of-file\n", 2);
 			break;
 		}
 		if (line[ft_strlen(line) - 1] == '\n')
 			line[ft_strlen(line) - 1] = '\0';
-		
-		// Check delimiter
 		if (ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);
 			break;
 		}
-		
 		// Expand variables in heredoc line if not single quoted delimiter
 		if (ft_strchr(delimiter, '\'') == NULL)
 		{
@@ -130,7 +127,6 @@ static int handle_heredoc(char *delimiter, t_mini *mini)
 		ft_putstr_fd(line, pipe_fds[1]);
 		ft_putstr_fd("\n", pipe_fds[1]);
 		free(line);
-		line_count++;
 	}
 	
 	close(pipe_fds[1]);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ctrl.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 09:34:05 by calleaum          #+#    #+#             */
-/*   Updated: 2025/04/03 15:34:00 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/03 20:14:44 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 // 🖕
 static void	sig_handler_interactive(int signal)
 {
-	if (signal == SIGINT && g_signal != -1)
+	if (signal == SIGINT)
 	{
 		g_signal = 130;
 		rl_replace_line("", 0);
@@ -31,7 +31,7 @@ static void	sig_handler_executing(int signal)
 	else if (signal == SIGINT)
 	{
 		g_signal = -1;
-		fd_printf(1, "^C");
+		// fd_printf(1, "^C\n");
 		close(0);
 	}
 	else
@@ -40,26 +40,26 @@ static void	sig_handler_executing(int signal)
 
 void	set_sig_interactive(void)
 {
-	struct termios	term;
+	// struct termios	term;
 
-	if (tcgetattr(STDIN_FILENO, &term) == 0)
-	{
-		term.c_lflag |= ECHOCTL;
-		tcsetattr(STDIN_FILENO, TCSANOW, &term);
-	}
+	// if (tcgetattr(STDIN_FILENO, &term) == 0)
+	// {
+	// 	term.c_lflag |= ECHOCTL;
+	// 	tcsetattr(STDIN_FILENO, TCSANOW, &term);
+	// }
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, sig_handler_interactive);
 }
 
 void	set_sig_executing(void)
 {
-	struct termios	term;
+	// struct termios	term;
 
-	if (tcgetattr(STDIN_FILENO, &term) == 0)
-	{
-		term.c_lflag &= ~ECHOCTL;
-		tcsetattr(STDIN_FILENO, TCSANOW, &term);
-	}
-	signal(SIGQUIT, sig_handler_executing);
+	// if (tcgetattr(STDIN_FILENO, &term) == 0)
+	// {
+	// 	term.c_lflag &= ~ECHOCTL;
+	// 	tcsetattr(STDIN_FILENO, TCSANOW, &term);
+	// }
+	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, sig_handler_executing);
 }
