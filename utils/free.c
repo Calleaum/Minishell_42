@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 11:00:23 by calleaum          #+#    #+#             */
-/*   Updated: 2025/04/01 09:06:42 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/03 19:44:44 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 static void	free_env_vars(char **env_vars)
 {
