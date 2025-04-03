@@ -9,6 +9,7 @@ SRC =	minishell.c \
 		builtin/ft_unset.c \
 		parsing/list_utils.c \
 		parsing/list_utils2.c \
+		parsing/list_utils3.c \
 		parsing/list.c \
 		env/dollar.c \
 		env/env_export.c \

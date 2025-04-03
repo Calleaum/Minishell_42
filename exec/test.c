@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:22:40 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/03 14:52:00 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/03 16:25:54 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,6 @@ static int handle_heredoc(char *delimiter, t_mini *mini)
 	{
 		ft_putstr_fd("> ", 1);
 		line = get_next_line(0);
-		// fd_printf(2, "%d\n", g_signal);
 		if (g_signal == -1)
 			break;
 		if (!line)
@@ -466,7 +465,7 @@ static int execute_external_command(t_mini *mini, char **args)
 	
 	path = find_command_path(args[0], mini);
 	if (!path)
-		return (free_env(mini->env), print_command_not_found(args[0]), 127);
+		return (print_command_not_found(args[0]), 127);
 	dir = opendir(path);
 	if (dir != NULL)
 	{
@@ -479,7 +478,6 @@ static int execute_external_command(t_mini *mini, char **args)
 	if (pid == -1)
 	{
 		perror("minishell: fork");
-		free_env(mini->env);
 		free(path);
 		return (1);
 	}
@@ -496,9 +494,9 @@ static int execute_external_command(t_mini *mini, char **args)
 		waitpid(pid, &status, 0);
 		free(path);
 		if (WIFEXITED(status))
-			return (free_env(mini->env), WEXITSTATUS(status));
+			return (WEXITSTATUS(status));
 		else
-			return (free_env(mini->env), 1);
+			return (1);
 	}
 	return (0);
 }
@@ -604,8 +602,8 @@ int execute_pipeline(t_mini *mini, t_node *tokens)
 				token = extract_command_token(commands[i]);
 				free_all(commands, NULL, cmd_count);
 				exit_status = execute_builtin(mini, token);
-				free_env(mini->env);
 				free_list(token);
+				free_env(mini->env);
 				exit(exit_status);
 			}
 			else if (commands[i] && commands[i]->type == ARG)
@@ -615,11 +613,13 @@ int execute_pipeline(t_mini *mini, t_node *tokens)
 					exit(1);
 				exit_status = execute_external_command(mini, args);
 				free_all(commands, args, cmd_count);
+				free_env(mini->env);
 				exit(exit_status);
 			}
 			else
 			{
 				free_all(commands, NULL, cmd_count);
+				free_env(mini->env);
 				exit(0);
 			}
 		}

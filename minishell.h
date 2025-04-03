@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/03 15:32:15 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/03 16:01:29 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,12 @@ extern pid_t	g_signal;
 int			ft_conststrcmp(char *s1, const char *s2);
 int			execute_pipeline(t_mini *mini, t_node *tokens);
 
-// list //
+// parsing //
+int			check_redir_syntax(t_node *list);
+int			check_pipe_syntax(t_node *list);
+int			empty_line(char *line);
+int			is_unclosedquote(char *str);
+
 void		init_tokenization(t_node **head, t_mini *n);
 int			init_new_token(char **current_token, char c);
 t_node		*create_token(char *value, int type);
