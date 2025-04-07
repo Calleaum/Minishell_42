@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/07 12:49:20 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/07 14:27:37 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,6 @@ t_node		*tokenize_input(char *input, t_mini *n);
 void		display_tokens(t_node *head);
 
 // ctrl //
-// void		setup_signals(void);
 void		set_sig_interactive(int i);
 void		set_sig_executing(void);
 

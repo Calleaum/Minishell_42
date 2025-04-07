@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:22:40 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/07 12:51:02 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/07 14:27:44 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,13 +99,12 @@ static int	handle_heredoc(char *delimiter, t_mini *mini)
 	set_sig_executing();
 	while (1)
 	{
-		ft_putstr_fd("> ", 1);
-		line = get_next_line(0);
-		if (g_signal == -1)
+		line = readline("> ");
+		if (g_signal == 130)
 			break;
 		if (!line)
 		{
-			ft_putstr_fd("\nminishell: warning: here-document delimited by end-of-file\n", 2);
+			ft_putstr_fd("minishell: warning: here-document delimited by end-of-file\n", 2);
 			break;
 		}
 		if (line[ft_strlen(line) - 1] == '\n')
