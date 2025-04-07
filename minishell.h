@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/03 19:27:15 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/07 12:49:20 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,16 +94,18 @@ extern pid_t	g_signal;
 # define CMD 6
 # define ARG 7
 
-# define MSG "minishell: error near unexpected token `|'\n"
+# define MSGREDIR "minishell: syntaxerror near unexpected token `newline'\n"
+# define MSGPIPE "minishell: syntax error near unexpected token `|'\n"
 
 int			ft_conststrcmp(char *s1, const char *s2);
 int			execute_pipeline(t_mini *mini, t_node *tokens);
 
 // parsing //
-int			check_redir_syntax(t_node *list);
-int			check_pipe_syntax(t_node *list);
 int			empty_line(char *line);
 int			is_unclosedquote(char *str);
+int			check_redir_syntax(t_node *list);
+int			check_pipe_syntax(t_node *list);
+int			has_heredoc(t_node *list);
 
 void		init_tokenization(t_node **head, t_mini *n);
 int			init_new_token(char **current_token, char c);
@@ -121,7 +123,7 @@ void		display_tokens(t_node *head);
 
 // ctrl //
 // void		setup_signals(void);
-void		set_sig_interactive(void);
+void		set_sig_interactive(int i);
 void		set_sig_executing(void);
 
 // echo //

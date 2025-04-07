@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/03 19:29:11 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/07 12:49:41 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ static int	execute_command(t_mini *mini)
 	}
 	if (check_pipe_syntax(list) || check_redir_syntax(list))
 		return (free_list(list), 0);
+	if (has_heredoc(list))
+		set_sig_interactive(1);
 	execute_pipeline(mini, list);
 	return (0);
 }
@@ -51,7 +53,7 @@ int	main(int ac, char **av, char **env)
 		return (printf("No arguments needed\n"), 1);
 	while (1)
 	{
-		set_sig_interactive();
+		set_sig_interactive(0);
 		mini.str = readline("minishell$ ");
 		if (!mini.str)
 			return (write(2, "exit\n", 5), free_env(mini.env), 0);

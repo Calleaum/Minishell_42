@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:22:40 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/03 20:14:27 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/07 12:51:02 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,14 +99,13 @@ static int	handle_heredoc(char *delimiter, t_mini *mini)
 	set_sig_executing();
 	while (1)
 	{
-		// ft_putstr_fd("> ", 1);
-		// line = get_next_line(0);
-		line = readline(">");
+		ft_putstr_fd("> ", 1);
+		line = get_next_line(0);
 		if (g_signal == -1)
 			break;
 		if (!line)
 		{
-			ft_putstr_fd("minishell: warning: here-document delimited by end-of-file\n", 2);
+			ft_putstr_fd("\nminishell: warning: here-document delimited by end-of-file\n", 2);
 			break;
 		}
 		if (line[ft_strlen(line) - 1] == '\n')
@@ -116,28 +115,20 @@ static int	handle_heredoc(char *delimiter, t_mini *mini)
 			free(line);
 			break;
 		}
-		// Expand variables in heredoc line if not single quoted delimiter
 		if (ft_strchr(delimiter, '\'') == NULL)
 		{
 			expanded_line = expand_variables(line, mini->last_exit_status, mini->env);
 			free(line);
 			line = expanded_line;
 		}
-		
 		ft_putstr_fd(line, pipe_fds[1]);
 		ft_putstr_fd("\n", pipe_fds[1]);
 		free(line);
 	}
-	
 	close(pipe_fds[1]);
 	if (dup2(pipe_fds[0], STDIN_FILENO) == -1)
-	{
-		close(pipe_fds[0]);
-		perror("minishell: dup2");
-		return (-1);
-	}
-	close(pipe_fds[0]);
-	return (0);
+		return (close(pipe_fds[0]), perror("minishell: dup2"), -1);
+	return (close(pipe_fds[0]), 0);
 }
 
 // Applies all redirections in a command

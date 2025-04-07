@@ -6,64 +6,11 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 15:59:58 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/03 16:00:36 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/07 12:48:36 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	check_redir_syntax(t_node *list)
-{
-	t_node	*temp;
-
-	temp = list;
-	while (temp && temp->next)
-	{
-		if (temp->type == INPUT_FILE || temp->type == HEREDOC
-			|| temp->type == OUTPUT_TRUNC || temp->type == OUTPUT_APPEND)
-		{
-			if (temp->next->type == INPUT_FILE || temp->next->type == HEREDOC
-				|| temp->next->type == OUTPUT_TRUNC
-				|| temp->next->type == OUTPUT_APPEND)
-				return (fd_printf(2
-						, "minishell: error near unexpected token `%s'\n"
-						, temp->next->data), 1);
-		}
-		temp = temp->next;
-	}
-	if (!temp->next && (temp->type == INPUT_FILE || temp->type == HEREDOC
-			|| temp->type == OUTPUT_TRUNC || temp->type == OUTPUT_APPEND))
-		return (fd_printf(2
-				, "minishell: error near unexpected token `newline'\n"), 1);
-	return (0);
-}
-
-int	check_pipe_syntax(t_node *list)
-{
-	t_node	*temp;
-
-	temp = list;
-	if (temp->type == PIPE)
-		return (fd_printf(2, MSG), 1);
-	while (temp && temp->next && temp->next->next)
-	{
-		if (temp->next->type == PIPE && (temp->type == INPUT_FILE
-				|| temp->type == HEREDOC || temp->type == OUTPUT_TRUNC
-				|| temp->type == OUTPUT_APPEND))
-			return (fd_printf(2, MSG), 1);
-		if (temp->type == PIPE && (temp->next->type == OUTPUT_TRUNC
-				|| temp->next->type == HEREDOC || temp->next->type == INPUT_FILE
-				|| temp->next->type == OUTPUT_APPEND))
-			if (temp->next->next->type != CMD && temp->next->next->type != ARG)
-				return (fd_printf(2, MSG), 1);
-		temp = temp->next;
-	}
-	while (temp && temp->next)
-		temp = temp->next;
-	if (temp->type == PIPE)
-		return (fd_printf(2, MSG), 1);
-	return (0);
-}
 
 int	empty_line(char *line)
 {
@@ -99,5 +46,71 @@ int	is_unclosedquote(char *str)
 	}
 	if (sq || dq)
 		return (ft_putendl_fd("Error: Unclosed quote detected", 2), -1);
+	return (0);
+}
+
+int	check_redir_syntax(t_node *list)
+{
+	t_node	*temp;
+
+	temp = list;
+	while (temp && temp->next)
+	{
+		if (temp->type == INPUT_FILE || temp->type == HEREDOC
+			|| temp->type == OUTPUT_TRUNC || temp->type == OUTPUT_APPEND)
+		{
+			if (temp->next->type == INPUT_FILE || temp->next->type == HEREDOC
+				|| temp->next->type == OUTPUT_TRUNC
+				|| temp->next->type == OUTPUT_APPEND)
+				return (fd_printf(2
+						, "minishell: syntax error near unexpected token `%s'\n"
+						, temp->next->data), 1);
+		}
+		temp = temp->next;
+	}
+	if (!temp->next && (temp->type == INPUT_FILE || temp->type == HEREDOC
+			|| temp->type == OUTPUT_TRUNC || temp->type == OUTPUT_APPEND))
+		return (fd_printf(2, MSGREDIR), 1);
+	return (0);
+}
+
+int	check_pipe_syntax(t_node *list)
+{
+	t_node	*temp;
+
+	temp = list;
+	if (temp->type == PIPE)
+		return (fd_printf(2, MSGPIPE), 1);
+	while (temp && temp->next && temp->next->next)
+	{
+		if (temp->next->type == PIPE && (temp->type == INPUT_FILE
+				|| temp->type == HEREDOC || temp->type == OUTPUT_TRUNC
+				|| temp->type == OUTPUT_APPEND))
+			return (fd_printf(2, MSGPIPE), 1);
+		if (temp->type == PIPE && (temp->next->type == OUTPUT_TRUNC
+				|| temp->next->type == HEREDOC || temp->next->type == INPUT_FILE
+				|| temp->next->type == OUTPUT_APPEND))
+			if (temp->next->next->type != CMD && temp->next->next->type != ARG)
+				return (fd_printf(2, MSGPIPE), 1);
+		temp = temp->next;
+	}
+	while (temp && temp->next)
+		temp = temp->next;
+	if (temp->type == PIPE)
+		return (fd_printf(2, MSGPIPE), 1);
+	return (0);
+}
+
+int	has_heredoc(t_node *list)
+{
+	t_node	*temp;
+
+	temp = list;
+	while (temp && temp->next)
+	{
+		if (temp->type == HEREDOC)
+			return (1);
+		temp = temp->next;
+	}
 	return (0);
 }
