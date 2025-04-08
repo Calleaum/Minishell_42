@@ -6,7 +6,7 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:22:40 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/08 16:44:05 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/08 16:53:48 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,27 +237,27 @@
 // }
 
 // Creates a copy of a token list from start to end (not including end)
-t_node *copy_token_list(t_node *start, t_node *end)
-{
-	t_node *head;
-	t_node *current;
-	t_node *new_token;
+// t_node *copy_token_list(t_node *start, t_node *end)
+// {
+// 	t_node *head;
+// 	t_node *current;
+// 	t_node *new_token;
 	
-	head = NULL;
-	current = start;
-	while (current && current != end)
-	{
-		new_token = create_token(current->data, current->type);
-		if (!new_token)
-		{
-			free_list(head);
-			return (NULL);
-		}
-		add_token(&head, new_token);
-		current = current->next;
-	}
-	return (head);
-}
+// 	head = NULL;
+// 	current = start;
+// 	while (current && current != end)
+// 	{
+// 		new_token = create_token(current->data, current->type);
+// 		if (!new_token)
+// 		{
+// 			free_list(head);
+// 			return (NULL);
+// 		}
+// 		add_token(&head, new_token);
+// 		current = current->next;
+// 	}
+// 	return (head);
+// }
 
 // // Split token list at pipe symbols
 // static t_node **split_commands(t_node *tokens, int *cmd_count)
