@@ -27,7 +27,6 @@ static int	execute_command(t_mini *mini)
 		return (free(mini->exp), 0);
 	g_signal = 0;
 	list = tokenize_input(mini->exp, mini);
-	display_tokens(list);
 	free(mini->exp);
 	if (*list->data == '\0')
 	{
