@@ -6,7 +6,7 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:22:40 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/08 10:03:13 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/08 10:43:20 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,74 +173,68 @@
 // }
 
 // Extracts command and arguments from token list
-static char **extract_command_args(t_node *tokens)
-{
-	t_node *current;
-	int count;
-	char **args;
-	int i;
+// static char **extract_command_args(t_node *tokens)
+// {
+// 	t_node *current;
+// 	int count;
+// 	char **args;
+// 	int i;
 	
-	// Count CMD and ARG tokens
-	count = 0;
-	current = tokens;
-	while (current)
-	{
-		if (current->type == CMD || current->type == ARG)
-		{
-			count++;
-			current = current->next;
-		}
-		else
-			break ;
-	}
-	
-	// Allocate memory for args array
-	args = (char **)malloc(sizeof(char *) * (count + 1));
-	if (!args)
-		return (NULL);
-	
-	// Fill args array
-	i = 0;
-	current = tokens;
-	while (current && i < count)
-	{
-		if (current->type == CMD || current->type == ARG)
-		{
-			args[i] = ft_strdup(current->data);
-			if (!args[i])
-			{
-				// Free previously allocated strings
-				while (--i >= 0)
-					free(args[i]);
-				free(args);
-				return (NULL);
-			}
-			i++;
-		}
-		current = current->next;
-	}
-	args[i] = NULL;
-	return (args);
-}
+// 	count = 0;
+// 	current = tokens;
+// 	while (current)
+// 	{
+// 		if (current->type == CMD || current->type == ARG)
+// 		{
+// 			count++;
+// 			current = current->next;
+// 		}
+// 		else
+// 			break ;
+// 	}
+// 	args = (char **)malloc(sizeof(char *) * (count + 1));
+// 	if (!args)
+// 		return (NULL);
+// 	i = 0;
+// 	current = tokens;
+// 	while (current && i < count)
+// 	{
+// 		if (current->type == CMD || current->type == ARG)
+// 		{
+// 			args[i] = ft_strdup(current->data);
+// 			if (!args[i])
+// 			{
+// 				while (--i >= 0)
+// 					free(args[i]);
+// 				free(args);
+// 				return (NULL);
+// 			}
+// 			i++;
+// 		}
+// 		current = current->next;
+// 	}
+// 	args[i] = NULL;
+// 	return (args);
+// }
 
-static t_node	*extract_command_token(t_node *tokens)
-{
-	t_node	*current;
-	t_node	*head;
-	t_node	*new_token;
+// static t_node	*extract_command_token(t_node *tokens)
+// {
+// 	t_node	*current;
+// 	t_node	*head;
+// 	t_node	*new_token;
 
-	head = NULL;
-	current = tokens;
-	while (current && (current->type == CMD || current->type == ARG))
-	{
-		new_token = create_token(current->data, current->type);
-		if (!new_token)
-			return (free_list(head), NULL);
-		add_token(&head, new_token);
-		current = current->next;
-	}
-	return (head);
-}
+// 	head = NULL;
+// 	current = tokens;
+// 	while (current && (current->type == CMD || current->type == ARG))
+// 	{
+// 		new_token = create_token(current->data, current->type);
+// 		if (!new_token)
+// 			return (free_list(head), NULL);
+// 		add_token(&head, new_token);
+// 		current = current->next;
+// 	}
+// 	return (head);
+// }
 
 // Creates a copy of a token list from start to end (not including end)
 static t_node *copy_token_list(t_node *start, t_node *end)
@@ -273,8 +267,7 @@ static t_node **split_commands(t_node *tokens, int *cmd_count)
 	t_node *start;
 	int count;
 	int i;
-	
-	// Count the number of pipes + 1
+
 	count = 1;
 	current = tokens;
 	while (current)
@@ -283,13 +276,9 @@ static t_node **split_commands(t_node *tokens, int *cmd_count)
 			count++;
 		current = current->next;
 	}
-	
-	// Allocate memory for commands array
 	commands = (t_node **)malloc(sizeof(t_node *) * count);
 	if (!commands)
 		return (NULL);
-	
-	// Split the tokens at each pipe
 	i = 0;
 	current = tokens;
 	start = current;
@@ -297,11 +286,9 @@ static t_node **split_commands(t_node *tokens, int *cmd_count)
 	{
 		if (current->type == PIPE)
 		{
-			// Create a sublist from start to current (excluding pipe)
 			commands[i] = copy_token_list(start, current);
 			if (!commands[i])
 			{
-				// Free previously allocated lists
 				while (--i >= 0)
 					free_list(commands[i]);
 				free(commands);
@@ -312,8 +299,6 @@ static t_node **split_commands(t_node *tokens, int *cmd_count)
 		}
 		current = current->next;
 	}
-	
-	// Handle the last command after the last pipe (or the only command if no pipes)
 	if (start)
 	{
 		commands[i] = copy_token_list(start, NULL);
@@ -325,12 +310,10 @@ static t_node **split_commands(t_node *tokens, int *cmd_count)
 			return (NULL);
 		}
 	}
-	
 	*cmd_count = count;
 	return (commands);
 }
 
-// Executes a builtin command
 static int execute_builtin(t_mini *mini, t_node *tokens)
 {
 	if (!ft_strcmp(tokens->data, "echo"))
@@ -350,7 +333,6 @@ static int execute_builtin(t_mini *mini, t_node *tokens)
 	return (0);
 }
 
-// Helper function to find the path of a command
 static char *find_command_path(char *cmd, t_mini *mini)
 {
 	char *path_env;
@@ -358,56 +340,42 @@ static char *find_command_path(char *cmd, t_mini *mini)
 	char *full_path;
 	int i;
 	
-	// Check if cmd contains a slash (absolute or relative path)
 	if (ft_strchr(cmd, '/'))
 	{
 		if (access(cmd, F_OK | X_OK) == 0)
 			return (ft_strdup(cmd));
 		return (NULL);
 	}
-	
-	// Get PATH environment variable
 	path_env = get_env_value(mini->env, "PATH");
 	if (!path_env)
 		return (NULL);
-	
-	// Split PATH into individual directories
 	paths = ft_split(path_env, ':');
 	if (!paths)
 		return (NULL);
-	
-	// Try each directory in PATH
 	i = 0;
 	while (paths[i])
 	{
 		full_path = ft_strjoin3(paths[i], "/", cmd);
 		if (!full_path)
 		{
-			// Free paths array
 			for (int j = 0; paths[j]; j++)
 				free(paths[j]);
 			free(paths);
 			return (NULL);
 		}
-		
 		if (access(full_path, F_OK | X_OK) == 0)
 		{
-			// Free paths array
 			for (int j = 0; paths[j]; j++)
 				free(paths[j]);
 			free(paths);
 			return (full_path);
 		}
-		
 		free(full_path);
 		i++;
 	}
-	
-	// Free paths array
 	for (i = 0; paths[i]; i++)
 		free(paths[i]);
 	free(paths);
-	
 	return (NULL);
 }
 
@@ -457,16 +425,11 @@ static int execute_external_command(t_mini *mini, char **args)
 	{
 		closedir(dir);
 		fd_printf(2, "minishell: %s: Is a directory\n", path);
-		free(path);
-		return 1;
+		return (free(path), 1);
 	}
 	pid = fork();
 	if (pid == -1)
-	{
-		perror("minishell: fork");
-		free(path);
-		return (1);
-	}
+		return (perror("minishell: fork"),free(path), 1);
 	else if (pid == 0)
 	{
 		if (execve(path, args, mini->env->env_vars) == -1)
@@ -512,7 +475,6 @@ int execute_pipeline(t_mini *mini, t_node *tokens)
 			dup2(stdout_copy, STDOUT_FILENO);
 			close(stdin_copy);
 			close(stdout_copy);
-
 			free_list(commands[0]);
 			free(commands);
 			return 1;
