@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:08:02 by calleaum          #+#    #+#             */
-/*   Updated: 2025/04/07 13:10:09 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/08 18:30:09 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,6 @@ void	init_mini(t_mini *mini, char **envp)
 	mini->str = NULL;
 	mini->exp = NULL;
 	mini->last_exit_status = 0;
-	mini->count = 0;
-	mini->in_word = 0;
-	mini->quote = '\0';
 	mini->env = init_env(envp);
 	if (!mini->env)
 	{

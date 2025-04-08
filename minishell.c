@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/08 14:37:52 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/08 17:49:16 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ static int	execute_command(t_mini *mini)
 		return (free(mini->exp), 0);
 	g_signal = 0;
 	list = tokenize_input(mini->exp, mini);
+	display_tokens(list);
 	free(mini->exp);
 	if (*list->data == '\0')
 	{

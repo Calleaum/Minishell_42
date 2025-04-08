@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 13:57:21 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/03/11 12:04:50 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/08 18:31:10 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	init_tokenization(t_node **head, t_mini *t)
 	t->i = 0;
 	t->current_token = NULL;
 	t->quoted_part = NULL;
+	t->special = 0;
 }
 
 int	init_new_token(char **current_token, char c)

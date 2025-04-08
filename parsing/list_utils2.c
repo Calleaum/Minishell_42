@@ -3,17 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   list_utils2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 18:58:19 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/08 14:30:02 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/08 18:49:41 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	get_token_type(char *word)
+int	get_token_type(char *word, t_mini *t)
 {
+	if (t->special)
+	{
+		t->special = 0;
+		return (ARG);
+	}
 	if (!ft_strncmp(word, "<", INT_MAX))
 		return (INPUT_FILE);
 	if (!ft_strncmp(word, "<<", INT_MAX))
@@ -45,13 +50,13 @@ char	*process_quoted_section(char *input, int *i, char quote_char)
 	end = start;
 	while (input[end] && input[end] != quote_char)
 		end++;
-	if (input[end] !=quote_char)
+	if (input[end] != quote_char)
 		start -= 1;
 	result = (char *)malloc(end - start + 1);
 	if (!result)
 		return (NULL);
 	ft_strlcpy(result, input + start, end - start + 1);
-	if (input[end] !=quote_char)
+	if (input[end] != quote_char)
 		*i = end;
 	else
 		*i = end + 1;
@@ -73,21 +78,4 @@ int	append_to_token(char **current_token, char c)
 	free(*current_token);
 	*current_token = temp;
 	return (1);
-}
-
-void	handle_special_char(t_node **head, char *input, int *i)
-{
-	char	special[3];
-
-	special[0] = '\0';
-	special[1] = '\0';
-	special[2] = '\0';
-	special[0] = input[*i];
-	if ((input[*i] == '>' || input[*i] == '<') && input[*i + 1] == input[*i])
-	{
-		special[1] = input[*i];
-		(*i)++;
-	}
-	add_token(head, create_token(special, get_token_type(special)));
-	(*i)++;
 }

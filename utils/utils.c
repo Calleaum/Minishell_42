@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 15:10:17 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/03/31 15:24:41 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/08 18:18:49 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,7 @@ void	display_tokens(t_node *head)
 	current = head;
 	while (current)
 	{
-		printf("Token: %s\n",
-			current->data);
+		printf("Token: %s\nType: %d\n", current->data, current->type);
 		current = current->next;
 	}
 }

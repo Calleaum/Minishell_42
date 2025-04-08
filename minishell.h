@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/08 16:50:02 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/08 18:48:46 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,7 @@ typedef struct s_mini
 	int		i;
 	char	*current_token;
 	char	*quoted_part;
-	size_t	count;
-	int		in_word;
-	char	quote;
+	int		special;
 	t_env	*env;
 }	t_mini;
 
@@ -120,10 +118,9 @@ t_node		*create_token(char *value, int type);
 void		add_token(t_node **head, t_node *new_token);
 void		free_list(t_node *head);
 
-int			get_token_type(char *word);
+int			get_token_type(char *word, t_mini *t);
 char		*process_quoted_section(char *input, int *i, char quote_char);
 int			append_to_token(char **current_token, char c);
-void		handle_special_char(t_node **head, char *input, int *i);
 
 t_node		*tokenize_input(char *input, t_mini *n);
 void		display_tokens(t_node *head);
