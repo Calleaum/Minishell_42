@@ -6,7 +6,7 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 11:37:16 by calleaum          #+#    #+#             */
-/*   Updated: 2025/03/25 08:42:45 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/08 08:36:31 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ void	print_env(t_env *env)
 		if (equals)
 		{
 			*equals = '\0';
-			printf("declare -x %s=\"%s\"\n", current->var, equals + 1);
+			printf("export %s=\"%s\"\n", current->var, equals + 1);
 			*equals = '=';
 		}
 		else
-			printf("declare -x %s\n", current->var);
+			printf("export %s\n", current->var);
 		current = current->next;
 	}
 	free_env_list(sorted_list);

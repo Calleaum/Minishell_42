@@ -3,174 +3,174 @@
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:22:40 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/07 14:27:44 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/08 10:03:13 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-// Opens input file for redirection
-static int	handle_input_file(char *filename)
-{
-	int	fd;
+// // Opens input file for redirection
+// int	handle_input_file(char *filename)
+// {
+// 	int	fd;
 	
-	fd = open(filename, O_RDONLY);
-	if (fd == -1)
-	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(filename, 2);
-		ft_putstr_fd(": ", 2);
-		perror("");
-		return (-1);
-	}
-	if (dup2(fd, STDIN_FILENO) == -1)
-	{
-		close(fd);
-		perror("minishell: dup2");
-		return (-1);
-	}
-	close(fd);
-	return (0);
-}
+// 	fd = open(filename, O_RDONLY);
+// 	if (fd == -1)
+// 	{
+// 		ft_putstr_fd("minishell: ", 2);
+// 		ft_putstr_fd(filename, 2);
+// 		ft_putstr_fd(": ", 2);
+// 		perror("");
+// 		return (-1);
+// 	}
+// 	if (dup2(fd, STDIN_FILENO) == -1)
+// 	{
+// 		close(fd);
+// 		perror("minishell: dup2");
+// 		return (-1);
+// 	}
+// 	close(fd);
+// 	return (0);
+// }
 
-// Opens output file for truncation redirection
-static int	handle_output_trunc(char *filename)
-{
-	int	fd;
+// // Opens output file for truncation redirection
+// int	handle_output_trunc(char *filename)
+// {
+// 	int	fd;
 	
-	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd == -1)
-	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(filename, 2);
-		ft_putstr_fd(": ", 2);
-		perror("");
-		return (-1);
-	}
-	if (dup2(fd, STDOUT_FILENO) == -1)
-	{
-		close(fd);
-		perror("minishell: dup2");
-		return (-1);
-	}
-	close(fd);
-	return (0);
-}
+// 	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+// 	if (fd == -1)
+// 	{
+// 		ft_putstr_fd("minishell: ", 2);
+// 		ft_putstr_fd(filename, 2);
+// 		ft_putstr_fd(": ", 2);
+// 		perror("");
+// 		return (-1);
+// 	}
+// 	if (dup2(fd, STDOUT_FILENO) == -1)
+// 	{
+// 		close(fd);
+// 		perror("minishell: dup2");
+// 		return (-1);
+// 	}
+// 	close(fd);
+// 	return (0);
+// }
 
-// Opens output file for append redirection
-static int	handle_output_append(char *filename)
-{
-	int	fd;
+// // Opens output file for append redirection
+// int	handle_output_append(char *filename)
+// {
+// 	int	fd;
 	
-	fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	if (fd == -1)
-	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(filename, 2);
-		ft_putstr_fd(": ", 2);
-		perror("");
-		return (-1);
-	}
-	if (dup2(fd, STDOUT_FILENO) == -1)
-	{
-		close(fd);
-		perror("minishell: dup2");
-		return (-1);
-	}
-	close(fd);
-	return (0);
-}
+// 	fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+// 	if (fd == -1)
+// 	{
+// 		ft_putstr_fd("minishell: ", 2);
+// 		ft_putstr_fd(filename, 2);
+// 		ft_putstr_fd(": ", 2);
+// 		perror("");
+// 		return (-1);
+// 	}
+// 	if (dup2(fd, STDOUT_FILENO) == -1)
+// 	{
+// 		close(fd);
+// 		perror("minishell: dup2");
+// 		return (-1);
+// 	}
+// 	close(fd);
+// 	return (0);
+// }
 
-// Handles heredoc redirection
-static int	handle_heredoc(char *delimiter, t_mini *mini)
-{
-	int		pipe_fds[2];
-	char	*line;
-	char	*expanded_line;
+// // Handles heredoc redirection
+// static int	handle_heredoc(char *delimiter, t_mini *mini)
+// {
+// 	int		pipe_fds[2];
+// 	char	*line;
+// 	char	*expanded_line;
 	
-	if (pipe(pipe_fds) == -1)
-	{
-		perror("minishell: pipe");
-		return (-1);
-	}
-	set_sig_executing();
-	while (1)
-	{
-		line = readline("> ");
-		if (g_signal == 130)
-			break;
-		if (!line)
-		{
-			ft_putstr_fd("minishell: warning: here-document delimited by end-of-file\n", 2);
-			break;
-		}
-		if (line[ft_strlen(line) - 1] == '\n')
-			line[ft_strlen(line) - 1] = '\0';
-		if (ft_strcmp(line, delimiter) == 0)
-		{
-			free(line);
-			break;
-		}
-		if (ft_strchr(delimiter, '\'') == NULL)
-		{
-			expanded_line = expand_variables(line, mini->last_exit_status, mini->env);
-			free(line);
-			line = expanded_line;
-		}
-		ft_putstr_fd(line, pipe_fds[1]);
-		ft_putstr_fd("\n", pipe_fds[1]);
-		free(line);
-	}
-	close(pipe_fds[1]);
-	if (dup2(pipe_fds[0], STDIN_FILENO) == -1)
-		return (close(pipe_fds[0]), perror("minishell: dup2"), -1);
-	return (close(pipe_fds[0]), 0);
-}
+// 	if (pipe(pipe_fds) == -1)
+// 	{
+// 		perror("minishell: pipe");
+// 		return (-1);
+// 	}
+// 	set_sig_executing();
+// 	while (1)
+// 	{
+// 		line = readline("> ");
+// 		if (g_signal == 130)
+// 			break;
+// 		if (!line)
+// 		{
+// 			ft_putstr_fd("minishell: warning: here-document delimited by end-of-file\n", 2);
+// 			break;
+// 		}
+// 		if (line[ft_strlen(line) - 1] == '\n')
+// 			line[ft_strlen(line) - 1] = '\0';
+// 		if (ft_strcmp(line, delimiter) == 0)
+// 		{
+// 			free(line);
+// 			break;
+// 		}
+// 		if (ft_strchr(delimiter, '\'') == NULL)
+// 		{
+// 			expanded_line = expand_variables(line, mini->last_exit_status, mini->env);
+// 			free(line);
+// 			line = expanded_line;
+// 		}
+// 		ft_putstr_fd(line, pipe_fds[1]);
+// 		ft_putstr_fd("\n", pipe_fds[1]);
+// 		free(line);
+// 	}
+// 	close(pipe_fds[1]);
+// 	if (dup2(pipe_fds[0], STDIN_FILENO) == -1)
+// 		return (close(pipe_fds[0]), perror("minishell: dup2"), -1);
+// 	return (close(pipe_fds[0]), 0);
+// }
 
 // Applies all redirections in a command
-static int apply_redirections(t_node *tokens, t_mini *mini)
-{
-	t_node *current;
-	int result;
+// static int apply_redirections(t_node *tokens, t_mini *mini)
+// {
+// 	t_node *current;
+// 	int result;
 	
-	current = tokens;
-	while (current)
-	{
-		if (current->type == INPUT_FILE && current->next)
-		{
-			result = handle_input_file(current->next->data);
-			if (result == -1)
-				return (1);
-			current = current->next;
-		}
-		else if (current->type == OUTPUT_TRUNC && current->next)
-		{
-			result = handle_output_trunc(current->next->data);
-			if (result == -1)
-				return (1);
-			current = current->next;
-		}
-		else if (current->type == OUTPUT_APPEND && current->next)
-		{
-			result = handle_output_append(current->next->data);
-			if (result == -1)
-				return (1);
-			current = current->next;
-		}
-		else if (current->type == HEREDOC && current->next)
-		{
-			result = handle_heredoc(current->next->data, mini);
-			if (result == -1)
-				return (1);
-			current = current->next;
-		}
-		current = current->next;
-	}
-	return (0);
-}
+// 	current = tokens;
+// 	while (current)
+// 	{
+// 		if (current->type == INPUT_FILE && current->next)
+// 		{
+// 			result = handle_input_file(current->next->data);
+// 			if (result == -1)
+// 				return (1);
+// 			current = current->next;
+// 		}
+// 		else if (current->type == OUTPUT_TRUNC && current->next)
+// 		{
+// 			result = handle_output_trunc(current->next->data);
+// 			if (result == -1)
+// 				return (1);
+// 			current = current->next;
+// 		}
+// 		else if (current->type == OUTPUT_APPEND && current->next)
+// 		{
+// 			result = handle_output_append(current->next->data);
+// 			if (result == -1)
+// 				return (1);
+// 			current = current->next;
+// 		}
+// 		else if (current->type == HEREDOC && current->next)
+// 		{
+// 			result = handle_heredoc(current->next->data, mini);
+// 			if (result == -1)
+// 				return (1);
+// 			current = current->next;
+// 		}
+// 		current = current->next;
+// 	}
+// 	return (0);
+// }
 
 // Extracts command and arguments from token list
 static char **extract_command_args(t_node *tokens)
