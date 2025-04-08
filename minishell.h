@@ -6,7 +6,7 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/08 10:44:36 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/08 14:35:24 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,11 +97,10 @@ extern pid_t	g_signal;
 # define MSGREDIR "minishell: syntaxerror near unexpected token `newline'\n"
 # define MSGPIPE "minishell: syntax error near unexpected token `|'\n"
 
-char	**extract_command_args(t_node *tokens);
-t_node	*extract_command_token(t_node *tokens);
 int			handle_heredoc(char *delimiter, t_mini *mini);
 int			apply_redirections(t_node *tokens, t_mini *mini);
-
+char		**extract_command_args(t_node *tokens);
+t_node		*extract_command_token(t_node *tokens);
 int			ft_conststrcmp(char *s1, const char *s2);
 int			execute_pipeline(t_mini *mini, t_node *tokens);
 

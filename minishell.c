@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/07 14:17:09 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/08 14:37:52 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@ static int	execute_command(t_mini *mini)
 {
 	t_node	*list;
 
-	if (empty_line(mini->str))
-		return (0);
 	add_history(mini->str);
 	if (is_unclosedquote(mini->str))
 		return (free(mini->str), 0);
@@ -48,7 +46,6 @@ int	main(int ac, char **av, char **env)
 	t_mini	mini;
 
 	init_mini(&mini, env);
-	mini.last_exit_status = 0;
 	if (ac != 1 && av && env)
 		return (printf("No arguments needed\n"), 1);
 	while (1)
@@ -57,6 +54,8 @@ int	main(int ac, char **av, char **env)
 		mini.str = readline("minishell$ ");
 		if (!mini.str)
 			return (write(2, "exit\n", 5), free_env(mini.env), 0);
+		if (empty_line(mini.str))
+			continue ;
 		execute_command(&mini);
 	}
 }

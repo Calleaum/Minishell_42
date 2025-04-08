@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   list_utils2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 18:58:19 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/03/27 15:43:05 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/08 14:30:02 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,16 @@ char	*process_quoted_section(char *input, int *i, char quote_char)
 	end = start;
 	while (input[end] && input[end] != quote_char)
 		end++;
+	if (input[end] !=quote_char)
+		start -= 1;
 	result = (char *)malloc(end - start + 1);
 	if (!result)
 		return (NULL);
 	ft_strlcpy(result, input + start, end - start + 1);
-	*i = end + 1;
+	if (input[end] !=quote_char)
+		*i = end;
+	else
+		*i = end + 1;
 	return (result);
 }
 
