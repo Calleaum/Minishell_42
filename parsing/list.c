@@ -73,7 +73,6 @@ static int	handle_quotes(t_node **head, t_mini *t, char *input, int *i)
 	}
 	else
 		t->current_token = quoted_part;
-	fd_printf(2, "ici: %s\n", t->current_token);
 	return (1);
 }
 
