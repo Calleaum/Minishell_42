@@ -17,11 +17,13 @@ SRC =	minishell.c \
 		exec/handle_heredoc.c \
 		exec/apply_redirections.c \
 		exec/extract_command.c \
+		exec/split_commands.c \
 		parsing/list_utils.c \
 		parsing/list_utils2.c \
 		parsing/list_utils3.c \
 		parsing/list.c \
 		utils/free.c \
+		utils/utils_exec.c \
 		utils/utils_export.c \
 		utils/utils_unset.c \
 		utils/utils.c \

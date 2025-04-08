@@ -6,7 +6,7 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:22:40 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/08 13:48:31 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/08 16:44:05 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,7 +237,7 @@
 // }
 
 // Creates a copy of a token list from start to end (not including end)
-static t_node *copy_token_list(t_node *start, t_node *end)
+t_node *copy_token_list(t_node *start, t_node *end)
 {
 	t_node *head;
 	t_node *current;
@@ -259,60 +259,60 @@ static t_node *copy_token_list(t_node *start, t_node *end)
 	return (head);
 }
 
-// Split token list at pipe symbols
-static t_node **split_commands(t_node *tokens, int *cmd_count)
-{
-	t_node **commands;
-	t_node *current;
-	t_node *start;
-	int count;
-	int i;
+// // Split token list at pipe symbols
+// static t_node **split_commands(t_node *tokens, int *cmd_count)
+// {
+// 	t_node **commands;
+// 	t_node *current;
+// 	t_node *start;
+// 	int count;
+// 	int i;
 
-	count = 1;
-	current = tokens;
-	while (current)
-	{
-		if (current->type == PIPE)
-			count++;
-		current = current->next;
-	}
-	commands = (t_node **)malloc(sizeof(t_node *) * count);
-	if (!commands)
-		return (NULL);
-	i = 0;
-	current = tokens;
-	start = current;
-	while (current)
-	{
-		if (current->type == PIPE)
-		{
-			commands[i] = copy_token_list(start, current);
-			if (!commands[i])
-			{
-				while (--i >= 0)
-					free_list(commands[i]);
-				free(commands);
-				return (NULL);
-			}
-			i++;
-			start = current->next;
-		}
-		current = current->next;
-	}
-	if (start)
-	{
-		commands[i] = copy_token_list(start, NULL);
-		if (!commands[i])
-		{
-			while (i >= 0)
-				free_list(commands[i]);
-			free(commands);
-			return (NULL);
-		}
-	}
-	*cmd_count = count;
-	return (commands);
-}
+// 	count = 1;
+// 	current = tokens;
+// 	while (current)
+// 	{
+// 		if (current->type == PIPE)
+// 			count++;
+// 		current = current->next;
+// 	}
+// 	commands = (t_node **)malloc(sizeof(t_node *) * count);
+// 	if (!commands)
+// 		return (NULL);
+// 	i = 0;
+// 	current = tokens;
+// 	start = current;
+// 	while (current)
+// 	{
+// 		if (current->type == PIPE)
+// 		{
+// 			commands[i] = copy_token_list(start, current);
+// 			if (!commands[i])
+// 			{
+// 				while (--i >= 0)
+// 					free_list(commands[i]);
+// 				free(commands);
+// 				return (NULL);
+// 			}
+// 			i++;
+// 			start = current->next;
+// 		}
+// 		current = current->next;
+// 	}
+// 	if (start)
+// 	{
+// 		commands[i] = copy_token_list(start, NULL);
+// 		if (!commands[i])
+// 		{
+// 			while (i >= 0)
+// 				free_list(commands[i]);
+// 			free(commands);
+// 			return (NULL);
+// 		}
+// 	}
+// 	*cmd_count = count;
+// 	return (commands);
+// }
 
 static int execute_builtin(t_mini *mini, t_node *tokens)
 {
