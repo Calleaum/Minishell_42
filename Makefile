@@ -18,6 +18,7 @@ SRC =	minishell.c \
 		exec/apply_redirections.c \
 		exec/extract_command.c \
 		exec/split_commands.c \
+		exec/exec_utils.c \
 		parsing/list_utils.c \
 		parsing/list_utils2.c \
 		parsing/list_utils3.c \

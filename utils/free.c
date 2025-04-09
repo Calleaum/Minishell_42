@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 11:00:23 by calleaum          #+#    #+#             */
-/*   Updated: 2025/04/03 19:44:44 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/09 15:55:15 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,14 @@ void	free_all(t_node **commands, char **args, int cmd_count)
 			free(args[j]);
 		free(args);
 	}
+}
+
+void	free_paths(char **paths)
+{
+	int	j;
+
+	j = -1;
+	while (paths[++j])
+		free(paths[j]);
+	free(paths);
 }

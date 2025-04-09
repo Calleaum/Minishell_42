@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/08 18:48:46 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/09 16:04:33 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,10 @@ int			apply_redirections(t_node *tokens, t_mini *mini);
 char		**extract_command_args(t_node *tokens);
 t_node		*extract_command_token(t_node *tokens);
 int			ft_conststrcmp(char *s1, const char *s2);
+int			execute_builtin(t_mini *mini, t_node *tokens);
+char		*find_command_path(char *cmd, t_mini *mini);
 int			execute_pipeline(t_mini *mini, t_node *tokens);
+int			execute_external_command(t_mini *mini, char **args);
 
 // parsing //
 int			empty_line(char *line);
@@ -187,5 +190,6 @@ int			ft_varlen(char *str);
 int			ft_isspace(char c);
 int			isdigit_str(char *str);
 void		free_all(t_node **commands, char **args, int cmd_count);
+void		free_paths(char **paths);
 
 #endif
