@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   list_utils3.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 15:59:58 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/09 17:13:30 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/09 17:41:54 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,16 +106,16 @@ int	has_heredoc(t_node *list)
 	t_node	*temp;
 
 	temp = list;
-	// if (temp)
-	// {
-	// 	if (!ft_strcmp(temp->data, "cat") || !ft_strcmp(temp->data, "as"))
-	// 		return (fd_printf(2, "oui"), 1);
-	// }
+	if (temp)
+	{
+		if (!ft_strcmp(temp->data, "cat") || !ft_strcmp(temp->data, "as"))
+			return (2);
+	}
 	while (temp && temp->next)
 	{
-		if (temp->type == HEREDOC || !ft_strcmp(temp->data, "cat") || ft_strcmp(temp->data, "cat") || !ft_strcmp(temp->data, "as"))
+		if (temp->type == HEREDOC)
 			return (1);
 		temp = temp->next;
 	}
-	return (fd_printf(2, "non"), 0);
+	return (0);
 }

@@ -13,12 +13,13 @@ SRC =	minishell.c \
 		env/env.c \
 		env/expand_env.c \
 		env/update_env.c \
-		exec/test.c \
+		exec/exec.c \
 		exec/handle_heredoc.c \
 		exec/apply_redirections.c \
 		exec/extract_command.c \
 		exec/split_commands.c \
 		exec/exec_utils.c \
+		exec/exec_utils2.c \
 		parsing/list_utils.c \
 		parsing/list_utils2.c \
 		parsing/list_utils3.c \

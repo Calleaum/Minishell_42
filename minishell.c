@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/09 16:06:30 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/09 17:39:17 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,9 @@ static int	execute_command(t_mini *mini)
 		return (free_list(list), 0);
 	if (has_heredoc(list))
 		set_sig_interactive(1);
-	execute_pipeline(mini, list);
+	if (has_heredoc(list) == 2)
+		set_sig_interactive(2);
+	mini->last_exit_status = execute_pipeline(mini, list);
 	return (0);
 }
 

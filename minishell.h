@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/09 16:04:33 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/09 18:14:05 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ typedef struct s_mini
 	char	*exp;
 	int		last_exit_status;
 	int		i;
+	int		j;
+	int		k;
 	char	*current_token;
 	char	*quoted_part;
 	int		special;
@@ -105,8 +107,11 @@ t_node		*extract_command_token(t_node *tokens);
 int			ft_conststrcmp(char *s1, const char *s2);
 int			execute_builtin(t_mini *mini, t_node *tokens);
 char		*find_command_path(char *cmd, t_mini *mini);
-int			execute_pipeline(t_mini *mini, t_node *tokens);
 int			execute_external_command(t_mini *mini, char **args);
+int			handle_fork_error(t_node **commands, int i, int cmd_count,
+				int pipe_fds[2][2]);
+void		setup_child_pipes(int i, int cmd_count, int pipe_fds[2][2]);
+int			execute_pipeline(t_mini *mini, t_node *tokens);
 
 // parsing //
 int			empty_line(char *line);
