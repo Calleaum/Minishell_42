@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/09 17:39:17 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/10 14:32:35 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ static int	execute_command(t_mini *mini)
 	free(mini->str);
 	if (*mini->exp == '\0')
 		return (free(mini->exp), 0);
-	g_signal = 0;
 	list = tokenize_input(mini->exp, mini);
 	free(mini->exp);
 	if (*list->data == '\0')
@@ -52,12 +51,15 @@ int	main(int ac, char **av, char **env)
 		return (printf("No arguments needed\n"), 1);
 	while (1)
 	{
+		g_signal = 0;
 		set_sig_interactive(0);
 		mini.str = readline("minishell$ ");
 		if (!mini.str)
 			return (write(2, "exit\n", 5), free_env(mini.env), 0);
 		if (empty_line(mini.str))
 			continue ;
+		if (g_signal == 130)
+			mini.last_exit_status = 130;
 		execute_command(&mini);
 	}
 }
