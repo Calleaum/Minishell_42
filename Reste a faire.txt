@@ -1,0 +1,13 @@
+• Ctrl + \ pour cat / as
+
+• Probleme : sur les HERE_DOC avec ou sans pipe
+
+• Probleme : sur les limiters dans les HERE_DOC, bien les prendre dans l'ordre
+
+• Probleme : dans les priorites de redirections (Run les HERE_DOC avant tout le reste, puis  
+	     evaluer les permissions de chaque fichier. Si un fichier d'entree n'est pas ouvrable
+	     cancel le run de la commande et run la prochaine sans entree)
+	     
+• Leak     : si un fichier de sortie n'a pas de permissions + met quand meme dans le dernier
+	     fichier de sortie alors qu'il n'est pas suppose faire de retour dans ce cas la
+
