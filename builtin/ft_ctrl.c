@@ -6,7 +6,7 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 09:34:05 by calleaum          #+#    #+#             */
-/*   Updated: 2025/04/11 10:53:31 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/11 11:21:38 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static void	sig_handler_interactive3(int signal)
 {
 	if (signal == SIGINT)
 	{
-		g_signal = 130;
+		g_signal = 131;
 		rl_replace_line("", 0);
 	}
 }

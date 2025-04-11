@@ -6,7 +6,7 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/11 10:54:07 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/11 11:22:15 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,11 @@ int	main(int ac, char **av, char **env)
 		if (empty_line(mini.str))
 			continue ;
 		execute_command(&mini);
-		if (g_signal == 130)
+		if (g_signal == 131)
 		{
 			mini.last_exit_status = 130;
 			write(STDOUT_FILENO, "\n", 1);
+			g_signal = 130;
 		}
 	}
 }
