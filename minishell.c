@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/10 14:32:35 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/11 10:54:07 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,11 @@ int	main(int ac, char **av, char **env)
 			return (write(2, "exit\n", 5), free_env(mini.env), 0);
 		if (empty_line(mini.str))
 			continue ;
-		if (g_signal == 130)
-			mini.last_exit_status = 130;
 		execute_command(&mini);
+		if (g_signal == 130)
+		{
+			mini.last_exit_status = 130;
+			write(STDOUT_FILENO, "\n", 1);
+		}
 	}
 }
