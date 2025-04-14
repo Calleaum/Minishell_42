@@ -6,7 +6,7 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:56:32 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/14 11:04:05 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/14 12:18:34 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,8 +111,8 @@ static int	process_child(char *path, char **args, t_mini *mini)
 		free(path);
 		if (WIFEXITED(status))
 			return (WEXITSTATUS(status));
-		else
-			return (1);
+		// else
+		// 	return (1);
 	}
 	return (0);
 }
