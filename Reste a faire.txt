@@ -12,6 +12,6 @@
 	     fichier de sortie alors qu'il n'est pas suppose faire de retour dans ce cas la
 
 
-echo test>>test    :  ne
+echo test>>test    :  ne ✅
 
-rev | rev | > test | > test | ls | wc -l > test|
+rev | rev | > test | > test | ls | wc -l > test| ✅

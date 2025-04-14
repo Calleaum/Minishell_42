@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/14 12:44:32 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/14 12:52:49 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ extern pid_t	g_signal;
 # define CMD 6
 # define ARG 7
 
-# define MSGREDIR "minishell: syntaxerror near unexpected token `newline'\n"
+# define MSGREDIR "minishell: syntax error near unexpected token `newline'\n"
 # define MSGPIPE "minishell: syntax error near unexpected token `|'\n"
 
 void	print_command_not_found(const char *cmd);

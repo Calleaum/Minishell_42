@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ctrl.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 09:34:05 by calleaum          #+#    #+#             */
-/*   Updated: 2025/04/11 11:21:38 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/14 13:21:17 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static void	sig_handler_interactive(int signal)
 	}
 }
 
-static void	sig_handler_interactive2(int signal)
+static void	sig_handler_heredoc(int signal)
 {
 	if (signal == SIGINT)
 	{
@@ -35,7 +35,7 @@ static void	sig_handler_interactive2(int signal)
 	}
 }
 
-static void	sig_handler_interactive3(int signal)
+static void	sig_handler_catas(int signal)
 {
 	if (signal == SIGINT)
 	{
@@ -52,11 +52,11 @@ void	set_sig_interactive(int i)
 	else if (i == 1)
 		signal(SIGINT, SIG_IGN);
 	else if (i == 2)
-		signal(SIGINT, sig_handler_interactive3);
+		signal(SIGINT, sig_handler_catas);
 }
 
 void	set_sig_executing(void)
 {
 	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, sig_handler_interactive2);
+	signal(SIGINT, sig_handler_heredoc);
 }
