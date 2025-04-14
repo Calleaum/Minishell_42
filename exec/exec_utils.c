@@ -6,7 +6,7 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:56:32 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/11 10:32:47 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/14 11:04:05 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ char	*find_command_path(char *cmd, t_mini *mini)
 	return (free_paths(paths), NULL);
 }
 
-static void	print_command_not_found(const char *cmd)
+void	print_command_not_found(const char *cmd)
 {
 	char		buffer[256];
 	int			i;
@@ -120,19 +120,23 @@ static int	process_child(char *path, char **args, t_mini *mini)
 int	execute_external_command(t_mini *mini, char **args)
 {
 	char	*path;
-	DIR		*dir;
+	int		error;
 
-	path = find_command_path(args[0], mini);
-	if (!path)
-		return (print_command_not_found(args[0]), 127);
-	dir = opendir(path);
-	if (dir != NULL)
-	{
-		closedir(dir);
-		fd_printf(2, "minishell: %s: Is a directory\n", path);
-		return (free(path), 1);
-	}
-	if (process_child(path, args, mini))
+	if (!args || !args[0])
 		return (1);
+	error = handle_path_errors(args[0]);
+	if (error != 0)
+		return (mini->last_exit_status = error, error);
+	path = get_command_path(args[0], mini);
+	if (!path)
+		return (mini->last_exit_status = 127, 127);
+	error = check_is_directory(path, args[0]);
+	if (error != 0)
+		return (mini->last_exit_status = error, error);
+	if (process_child(path, args, mini))
+	{
+		free(path);
+		return (mini->last_exit_status = 1, 1);
+	}
 	return (0);
 }

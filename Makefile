@@ -15,6 +15,7 @@ SRC =	minishell.c \
 		env/update_env.c \
 		exec/exec.c \
 		exec/handle_heredoc.c \
+		exec/permission.c \
 		exec/apply_redirections.c \
 		exec/extract_command.c \
 		exec/split_commands.c \

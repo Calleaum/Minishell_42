@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/09 18:14:05 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/14 10:59:52 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,12 @@ extern pid_t	g_signal;
 
 # define MSGREDIR "minishell: syntaxerror near unexpected token `newline'\n"
 # define MSGPIPE "minishell: syntax error near unexpected token `|'\n"
+
+void	print_command_not_found(const char *cmd);
+int	handle_path_errors(char *cmd);
+char	*get_command_path(char *cmd, t_mini *mini);
+int	check_file_permissions(char *cmd);
+int	check_is_directory(char *path, char *cmd);
 
 t_node		**clean_commands(t_node **commands, int index);
 t_node		**allocate_commands(int count);
