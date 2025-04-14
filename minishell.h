@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/14 10:59:52 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/14 12:44:32 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,8 @@ void		free_list(t_node *head);
 int			get_token_type(char *word, t_mini *t);
 char		*process_quoted_section(char *input, int *i, char quote_char);
 int			append_to_token(char **current_token, char c);
+int			is_special(char *quoted_part);
+void		handle_special_char(t_node **head, t_mini *t, char *input, int *i);
 
 t_node		*tokenize_input(char *input, t_mini *n);
 void		display_tokens(t_node *head);

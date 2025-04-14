@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 18:58:19 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/08 18:49:41 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/14 12:40:00 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,4 +78,36 @@ int	append_to_token(char **current_token, char c)
 	free(*current_token);
 	*current_token = temp;
 	return (1);
+}
+
+int	is_special(char *quoted_part)
+{
+	if (!ft_strncmp(quoted_part, "<", INT_MAX))
+		return (1);
+	if (!ft_strncmp(quoted_part, "<<", INT_MAX))
+		return (1);
+	if (!ft_strncmp(quoted_part, ">", INT_MAX))
+		return (1);
+	if (!ft_strncmp(quoted_part, ">>", INT_MAX))
+		return (1);
+	if (!ft_strncmp(quoted_part, "|", INT_MAX))
+		return (1);
+	return (0);
+}
+
+void	handle_special_char(t_node **head, t_mini *t, char *input, int *i)
+{
+	char	special[3];
+
+	special[0] = '\0';
+	special[1] = '\0';
+	special[2] = '\0';
+	special[0] = input[*i];
+	if ((input[*i] == '>' || input[*i] == '<') && input[*i + 1] == input[*i])
+	{
+		special[1] = input[*i];
+		(*i)++;
+	}
+	add_token(head, create_token(special, get_token_type(special, t)));
+	(*i)++;
 }
