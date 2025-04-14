@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ctrl.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 09:34:05 by calleaum          #+#    #+#             */
-/*   Updated: 2025/04/14 13:21:17 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/14 14:43:26 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,17 +42,23 @@ static void	sig_handler_catas(int signal)
 		g_signal = 131;
 		rl_replace_line("", 0);
 	}
+	if (signal == SIGQUIT)
+		g_signal = 132;
 }
 
 void	set_sig_interactive(int i)
 {
-	signal(SIGQUIT, SIG_IGN);
+	if (i != 2)
+		signal(SIGQUIT, SIG_IGN);
 	if (i == 0)
 		signal(SIGINT, sig_handler_interactive);
 	else if (i == 1)
 		signal(SIGINT, SIG_IGN);
 	else if (i == 2)
+	{
 		signal(SIGINT, sig_handler_catas);
+		signal(SIGQUIT, sig_handler_catas);
+	}
 }
 
 void	set_sig_executing(void)

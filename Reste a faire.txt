@@ -1,5 +1,3 @@
-• Ctrl + \ pour cat / as
-
 • Probleme : sur les HERE_DOC avec ou sans pipe
 
 • Probleme : sur les limiters dans les HERE_DOC, bien les prendre dans l'ordre
@@ -10,8 +8,3 @@
 	     
 • Leak     : si un fichier de sortie n'a pas de permissions + met quand meme dans le dernier
 	     fichier de sortie alors qu'il n'est pas suppose faire de retour dans ce cas la
-
-
-echo test>>test    :  ne ✅
-
-rev | rev | > test | > test | ls | wc -l > test| ✅
