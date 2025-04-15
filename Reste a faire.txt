@@ -7,4 +7,4 @@
 	     cancel le run de la commande et run la prochaine sans entree)
 	     
 • Leak     : si un fichier de sortie n'a pas de permissions + met quand meme dans le dernier
-	     fichier de sortie alors qu'il n'est pas suppose faire de retour dans ce cas la
+	     fichier de sortie alors qu'il n'est pas suppose faire de retour dans ce cas la			❎ ????

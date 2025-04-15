@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 18:58:19 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/14 12:40:00 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/15 17:58:28 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,13 @@ int	get_token_type(char *word, t_mini *t)
 		return (ARG);
 	}
 	if (!ft_strncmp(word, "<", INT_MAX))
-		return (INPUT_FILE);
+		return (IF);
 	if (!ft_strncmp(word, "<<", INT_MAX))
-		return (HEREDOC);
+		return (HD);
 	if (!ft_strncmp(word, ">", INT_MAX))
-		return (OUTPUT_TRUNC);
+		return (OT);
 	if (!ft_strncmp(word, ">>", INT_MAX))
-		return (OUTPUT_APPEND);
+		return (OA);
 	if (!ft_strncmp(word, "|", INT_MAX))
 		return (PIPE);
 	if (!ft_strncmp(word, "echo", INT_MAX)

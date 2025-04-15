@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 09:54:45 by calleaum          #+#    #+#             */
-/*   Updated: 2025/04/15 12:47:58 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/15 13:49:13 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,8 +128,8 @@ char	*process_dollar_sign(char *str, t_expand *exp, t_env *env, int hd)
 		if (!expand_env_variable(str, &exp->i, exp, env))
 			return (NULL);
 	}
-	else if ((!((str[exp->i] == '\'' || str[exp->i] == '"')
-			&& !exp->sq && !exp->dq) || !str[exp->i]) || hd)
+	else if ((!((str[exp->i] == '\'') && !exp->sq && !exp->dq)
+			|| !str[exp->i]) || hd)
 		exp->expanded[exp->j++] = '$';
 	return (exp->expanded);
 }

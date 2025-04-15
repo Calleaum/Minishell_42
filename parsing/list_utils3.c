@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 15:59:58 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/14 12:48:20 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/15 17:58:28 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,20 +56,20 @@ int	check_redir_syntax(t_node *list)
 	temp = list;
 	while (temp && temp->next)
 	{
-		if (temp->type == INPUT_FILE || temp->type == HEREDOC
-			|| temp->type == OUTPUT_TRUNC || temp->type == OUTPUT_APPEND)
+		if (temp->type == IF || temp->type == HD
+			|| temp->type == OT || temp->type == OA)
 		{
-			if (temp->next->type == INPUT_FILE || temp->next->type == HEREDOC
-				|| temp->next->type == OUTPUT_TRUNC
-				|| temp->next->type == OUTPUT_APPEND)
+			if (temp->next->type == IF || temp->next->type == HD
+				|| temp->next->type == OT
+				|| temp->next->type == OA)
 				return (fd_printf(2
 						, "minishell: syntax error near unexpected token `%s'\n"
 						, temp->next->data), 1);
 		}
 		temp = temp->next;
 	}
-	if (!temp->next && (temp->type == INPUT_FILE || temp->type == HEREDOC
-			|| temp->type == OUTPUT_TRUNC || temp->type == OUTPUT_APPEND))
+	if (!temp->next && (temp->type == IF || temp->type == HD
+			|| temp->type == OT || temp->type == OA))
 		return (fd_printf(2, MSGREDIR), 1);
 	return (0);
 }
@@ -83,13 +83,13 @@ int	check_pipe_syntax(t_node *list)
 		return (fd_printf(2, MSGPIPE), 1);
 	while (temp && temp->next && temp->next->next)
 	{
-		if (temp->next->type == PIPE && (temp->type == INPUT_FILE
-				|| temp->type == HEREDOC || temp->type == OUTPUT_TRUNC
-				|| temp->type == OUTPUT_APPEND))
+		if (temp->next->type == PIPE && (temp->type == IF
+				|| temp->type == HD || temp->type == OT
+				|| temp->type == OA))
 			return (fd_printf(2, MSGPIPE), 1);
-		if (temp->type == PIPE && (temp->next->type == OUTPUT_TRUNC
-				|| temp->next->type == HEREDOC || temp->next->type == INPUT_FILE
-				|| temp->next->type == OUTPUT_APPEND))
+		if (temp->type == PIPE && (temp->next->type == OT
+				|| temp->next->type == HD || temp->next->type == IF
+				|| temp->next->type == OA))
 			if (temp->next->next->type != CMD && temp->next->next->type != ARG)
 				return (fd_printf(2, MSGPIPE), 1);
 		temp = temp->next;
@@ -113,7 +113,7 @@ int	has_heredoc(t_node *list)
 	}
 	while (temp && temp->next)
 	{
-		if (temp->type == HEREDOC)
+		if (temp->type == HD)
 			return (1);
 		temp = temp->next;
 	}

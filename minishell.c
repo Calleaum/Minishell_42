@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/15 12:47:09 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/15 18:13:18 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ static int	execute_command(t_mini *mini)
 	add_history(mini->str);
 	if (is_unclosedquote(mini->str))
 		return (free(mini->str), 0);
-	mini->exp = expand_variables(mini->str, mini->last_exit_status, mini->env, 0);
+	mini->exp = expand_variables(mini->str, mini->last_exit_status, mini->env,
+			0);
 	free(mini->str);
 	if (*mini->exp == '\0')
 		return (free(mini->exp), 0);

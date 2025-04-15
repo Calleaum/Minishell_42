@@ -1,7 +1,7 @@
 To handle heredocs like in bash for the examples you provided, you need to modify your code to process multiple heredocs in the correct order, both within a single command and across pipelines. Let me analyze what needs to be changed in your implementation.
 Currently, your code seems to handle heredocs one at a time as it encounters them in the token list. For multiple heredocs in a single command or across pipes, you need to ensure that:
 
-1. Each heredoc is processed in the order they appear in the command line
+1. Each HD is processed in the order they appear in the command line
 2. All heredocs are set up before executing any commands
 3. The correct stdin is used for each command in the pipeline
 
@@ -12,14 +12,14 @@ Here's what I'd recommend changing:
 3. Finally, ensure the pipe handling properly connects inputs and outputs
 
 Let's create a solution:
-Multiple Heredoc ImplementationCode 
+Multiple HD ImplementationCode 
 The key changes I've made to handle multiple heredocs in your code:
 
-1. Created a linked list structure (t_heredoc) to store information about each heredoc.
+1. Created a linked list structure (t_heredoc) to store information about each HD.
 2. Added a function to collect all heredocs from the token list before processing any of them.
 3. Modified the processing approach to handle all heredocs in order, saving their pipe file descriptors.
-4. Updated the redirection handling to use the appropriate heredoc pipe when needed.
-5. Added state tracking to reset heredoc processing between command lines.
+4. Updated the redirection handling to use the appropriate HD pipe when needed.
+5. Added state tracking to reset HD processing between command lines.
 
 This implementation will handle your examples correctly:
 

@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/15 12:46:55 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/15 17:56:08 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,19 +83,31 @@ typedef struct s_expand
 	int		in_quote;
 }	t_expand;
 
+typedef struct s_heredoc
+{
+	char				*delimiter;
+	int					pipe_fd[2];
+	struct s_heredoc	*next;
+}	t_heredoc;
+
 extern pid_t	g_signal;
 
 // Token types
-# define INPUT_FILE 1
-# define HEREDOC 2
-# define OUTPUT_TRUNC 3
-# define OUTPUT_APPEND 4
+# define IF 1
+# define HD 2
+# define OT 3
+# define OA 4
 # define PIPE 5
 # define CMD 6
 # define ARG 7
 
 # define MSGREDIR "minishell: syntax error near unexpected token `newline'\n"
 # define MSGPIPE "minishell: syntax error near unexpected token `|'\n"
+
+t_heredoc	*collect_heredocs(t_node *tokens);
+int			process_heredocs(t_heredoc *heredocs, t_mini *mini);
+void		free_heredocs(t_heredoc *heredocs);
+int			handle_processed_heredoc(int pipe_fd);
 
 void		print_command_not_found(const char *cmd);
 int			handle_path_errors(char *cmd);
@@ -106,7 +118,7 @@ int			check_is_directory(char *path, char *cmd);
 t_node		**clean_commands(t_node **commands, int index);
 t_node		**allocate_commands(int count);
 t_node		**split_commands(t_node *tokens, int *cmd_count);
-int			handle_heredoc(char *delimiter, t_mini *mini);
+// int			handle_heredoc(char *delimiter, t_mini *mini);
 int			apply_redirections(t_node *tokens, t_mini *mini);
 char		**extract_command_args(t_node *tokens);
 t_node		*extract_command_token(t_node *tokens);
@@ -166,7 +178,8 @@ int			check_token_match(char *token_data, const char *var_name);
 
 // env //
 int			ft_env(t_mini *mini, t_node *args);
-char		*expand_variables(char *str, int last_exit_status, t_env *env, int hd);
+char		*expand_variables(char *str, int last_exit_status, t_env *env,
+				int hd);
 char		*expand_exit_status(t_expand *exp, int last_exit_status);
 size_t		calc_exp_siz(char *str, int last_exit_status, t_env *env);
 int			add_env_value(t_env *env, const char *name, const char *value);

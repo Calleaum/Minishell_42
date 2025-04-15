@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:56:32 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/14 12:18:34 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/15 18:11:24 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,8 +111,8 @@ static int	process_child(char *path, char **args, t_mini *mini)
 		free(path);
 		if (WIFEXITED(status))
 			return (WEXITSTATUS(status));
-		// else
-		// 	return (1);
+		else
+			return (1);
 	}
 	return (0);
 }
@@ -134,9 +134,6 @@ int	execute_external_command(t_mini *mini, char **args)
 	if (error != 0)
 		return (mini->last_exit_status = error, error);
 	if (process_child(path, args, mini))
-	{
-		free(path);
 		return (mini->last_exit_status = 1, 1);
-	}
 	return (0);
 }
