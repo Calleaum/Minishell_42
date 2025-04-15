@@ -117,10 +117,10 @@ static int process_line(char *line, char *delimiter, int pipe_fd, t_mini *mini)
         free(line);
         return (1);
     }
-    if (ft_strchr(delimiter, '\'') == NULL)
+    else
     {
         expanded_line = expand_variables(line,
-                mini->last_exit_status, mini->env);
+                mini->last_exit_status, mini->env, 1);
         free(line);
         line = expanded_line;
     }

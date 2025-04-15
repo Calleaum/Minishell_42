@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_heredoc.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 09:51:35 by calleaum          #+#    #+#             */
-/*   Updated: 2025/04/14 17:29:07 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/15 12:42:31 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,10 @@ static int	process_line(char *line, char *delimiter, int pipe_fd, t_mini *mini)
 		free(line);
 		return (1);
 	}
-	if (ft_strchr(delimiter, '\'') == NULL)
+	else
 	{
 		expanded_line = expand_variables(line,
-				mini->last_exit_status, mini->env);
+				mini->last_exit_status, mini->env, 1);
 		free(line);
 		line = expanded_line;
 	}

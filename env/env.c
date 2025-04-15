@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 09:54:45 by calleaum          #+#    #+#             */
-/*   Updated: 2025/04/08 16:44:07 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/15 12:47:58 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,27 +110,26 @@ char	*expand_env_variable(char *str, int *i, t_expand *exp, t_env *env)
 	return (exp->expanded);
 }
 
-char	*process_dollar_sign(char *str, int *i, t_expand *exp,
-		t_env *env)
+char	*process_dollar_sign(char *str, t_expand *exp, t_env *env, int hd)
 {
 	char	*var_name;
 
-	(*i)++;
-	if (str[*i] == '?' && !exp->sq)
+	exp->i++;
+	if (str[exp->i] == '?' && !exp->sq)
 	{
 		if (!expand_exit_status(exp, env->last_exit_status))
 			return (NULL);
-		(*i)++;
+		exp->i++;
 	}
-	else if ((ft_isalpha(str[*i]) || str[*i] == '_') && !exp->sq)
+	else if ((ft_isalpha(str[exp->i]) || str[exp->i] == '_') && !exp->sq)
 	{
-		var_name = ft_substr(str, *i, ft_varlen(str + *i));
+		var_name = ft_substr(str, exp->i, ft_varlen(str + exp->i));
 		free(var_name);
-		if (!expand_env_variable(str, i, exp, env))
+		if (!expand_env_variable(str, &exp->i, exp, env))
 			return (NULL);
 	}
-	else if (!((str[*i] == '\'' || str[*i] == '"')
-			&& !exp->sq && !exp->dq) || !str[*i])
+	else if ((!((str[exp->i] == '\'' || str[exp->i] == '"')
+			&& !exp->sq && !exp->dq) || !str[exp->i]) || hd)
 		exp->expanded[exp->j++] = '$';
 	return (exp->expanded);
 }

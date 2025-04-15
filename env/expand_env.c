@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env2.c                                             :+:      :+:    :+:   */
+/*   expand_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:16:06 by calleaum          #+#    #+#             */
-/*   Updated: 2025/03/17 17:20:17 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/15 12:45:41 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void	init_exp(t_expand *exp)
 	exp->in_quote = 0;
 }
 
-char	*expand_variables(char *str, int lst_ex_stat, t_env *env)
+char	*expand_variables(char *str, int lst_ex_stat, t_env *env, int hd)
 {
 	t_expand		exp;
 
@@ -34,7 +34,7 @@ char	*expand_variables(char *str, int lst_ex_stat, t_env *env)
 	init_exp(&exp);
 	while (str[exp.i])
 	{
-		if (str[exp.i] == '\'' || str[exp.i] == '"')
+		if ((str[exp.i] == '\'' || str[exp.i] == '"') && !hd)
 		{
 			if (str[exp.i] == '\'' && !exp.dq)
 				exp.sq = !exp.sq;
@@ -42,7 +42,7 @@ char	*expand_variables(char *str, int lst_ex_stat, t_env *env)
 				exp.dq = !exp.dq;
 		}
 		if (str[exp.i] == '$')
-			exp.expanded = process_dollar_sign(str, &exp.i, &exp, env);
+			exp.expanded = process_dollar_sign(str, &exp, env, hd);
 		else
 			exp.expanded[exp.j++] = str[exp.i++];
 	}
