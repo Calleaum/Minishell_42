@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 10:00:15 by calleaum          #+#    #+#             */
-/*   Updated: 2025/04/15 17:58:52 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/17 14:42:31 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,14 +81,10 @@ static int	handle_output_append(char *filename)
 	return (0);
 }
 
-static int	process_redirection(t_node *current, t_heredoc **heredocs)
+static int	process_redirection(t_node *current)
 {
-	int			i;
-	int			result;
-	static int	heredoc_index = 0;
-	t_heredoc	*current_heredoc;
+	int	result;
 
-	i = -1;
 	result = 0;
 	if (current->type == IF && current->next)
 		result = handle_input_file(current->next->data);
@@ -96,45 +92,25 @@ static int	process_redirection(t_node *current, t_heredoc **heredocs)
 		result = handle_output_trunc(current->next->data);
 	else if (current->type == OA && current->next)
 		result = handle_output_append(current->next->data);
-	else if (current->type == HD && current->next)
-	{
-		current_heredoc = *heredocs;
-		while (++i < heredoc_index && current_heredoc)
-			current_heredoc = current_heredoc->next;
-		if (current_heredoc)
-		{
-			result = handle_processed_heredoc(current_heredoc->pipe_fd[0]);
-			heredoc_index++;
-		}
-	}
 	return (result);
 }
 
-int	apply_redirections(t_node *tokens, t_mini *mini)
+int	apply_redirections(t_node *tokens)
 {
-	static int			first_call = 1;
-	static t_heredoc	*heredocs = NULL;
-	t_node				*current;
-	int					result;
+	t_node	*current;
+	int		result;
 
-	if (first_call--)
-	{
-		heredocs = collect_heredocs(tokens);
-		if (heredocs)
-			if (process_heredocs(heredocs, mini) == -1)
-				return (free_heredocs(heredocs), heredocs = NULL, -1);
-	}
 	current = tokens;
 	while (current)
 	{
 		if ((current->type == IF || current->type == OT
-				|| current->type == OA || current->type == HD) && current->next)
+				|| current->type == OA) && current->next)
 		{
-			result = process_redirection(current, &heredocs);
+			result = process_redirection(current);
 			if (result == -1)
-				return (free_heredocs(heredocs), 1);
+				return (1);
 		}
 		current = current->next;
 	}
-	return (free_heredocs(heredocs), 0);
+	return (0);
 }

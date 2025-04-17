@@ -18,8 +18,7 @@ SRC =	minishell.c \
 		exec/exec_utils2.c \
 		exec/exec.c \
 		exec/extract_command.c \
-		exec/handle_heredoc.c \
-		exec/heredoc_utils.c \
+		exec/heredoc.c \
 		exec/permission.c \
 		exec/split_commands.c \
 		parsing/list_utils.c \

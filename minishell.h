@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/15 17:56:08 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/17 18:04:34 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,9 @@ typedef struct s_mini
 	char	*current_token;
 	char	*quoted_part;
 	int		special;
+	int		**heredoc_fds;
+	int		*heredoc_counts;
+	int		cmd_count;
 	t_env	*env;
 }	t_mini;
 
@@ -104,10 +107,7 @@ extern pid_t	g_signal;
 # define MSGREDIR "minishell: syntax error near unexpected token `newline'\n"
 # define MSGPIPE "minishell: syntax error near unexpected token `|'\n"
 
-t_heredoc	*collect_heredocs(t_node *tokens);
-int			process_heredocs(t_heredoc *heredocs, t_mini *mini);
-void		free_heredocs(t_heredoc *heredocs);
-int			handle_processed_heredoc(int pipe_fd);
+int			prepare_heredocs(t_node **commands, int cmd_count, t_mini *mini);
 
 void		print_command_not_found(const char *cmd);
 int			handle_path_errors(char *cmd);
@@ -118,8 +118,7 @@ int			check_is_directory(char *path, char *cmd);
 t_node		**clean_commands(t_node **commands, int index);
 t_node		**allocate_commands(int count);
 t_node		**split_commands(t_node *tokens, int *cmd_count);
-// int			handle_heredoc(char *delimiter, t_mini *mini);
-int			apply_redirections(t_node *tokens, t_mini *mini);
+int			apply_redirections(t_node *tokens);
 char		**extract_command_args(t_node *tokens);
 t_node		*extract_command_token(t_node *tokens);
 int			ft_conststrcmp(char *s1, const char *s2);

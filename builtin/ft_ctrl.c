@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ctrl.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 09:34:05 by calleaum          #+#    #+#             */
-/*   Updated: 2025/04/14 14:43:26 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/17 17:17:34 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ static void	sig_handler_heredoc(int signal)
 		g_signal = 130;
 		rl_replace_line("", 0);
 		write(STDOUT_FILENO, "\n", 1);
-		close(0);
 	}
 }
 
@@ -53,7 +52,10 @@ void	set_sig_interactive(int i)
 	if (i == 0)
 		signal(SIGINT, sig_handler_interactive);
 	else if (i == 1)
+	{
 		signal(SIGINT, SIG_IGN);
+		signal(SIGINT, sig_handler_heredoc);
+	}
 	else if (i == 2)
 	{
 		signal(SIGINT, sig_handler_catas);
@@ -61,8 +63,8 @@ void	set_sig_interactive(int i)
 	}
 }
 
-void	set_sig_executing(void)
-{
-	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, sig_handler_heredoc);
-}
+// void	set_sig_executing(void)
+// {
+// 	signal(SIGQUIT, SIG_IGN);
+// 	signal(SIGINT, sig_handler_heredoc);
+// }

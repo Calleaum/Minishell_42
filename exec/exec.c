@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 18:09:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/14 13:27:16 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/17 18:04:47 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int	execute_single_command(t_mini *mini, t_node **cmd, int cmd_count)
 
 	stdin_copy = dup(STDIN_FILENO);
 	stdout_copy = dup(STDOUT_FILENO);
-	if (apply_redirections(cmd[0], mini) != 0)
+	if (apply_redirections(cmd[0]) != 0)
 		return (dup2(stdin_copy, STDIN_FILENO), dup2(stdin_copy, STDOUT_FILENO),
 			close(stdin_copy), close(stdout_copy), 1);
 	if (!ft_strcmp(cmd[0]->data, "exit"))
@@ -47,7 +47,7 @@ static int	execute_child_command(t_mini *mini, t_node **commands,
 	int		exit_status;
 	char	**args;
 
-	if (apply_redirections(commands[i], mini) != 0)
+	if (apply_redirections(commands[i]) != 0)
 		return (1);
 	if (commands[i] && commands[i]->type == CMD)
 	{
@@ -127,6 +127,8 @@ int	execute_pipeline(t_mini *mini, t_node *tokens)
 	free_list(tokens);
 	if (!commands)
 		return (1);
+	if (prepare_heredocs(commands, cmd_count, mini) != 0)
+		return (free_all(commands, NULL, cmd_count), 1);
 	if (cmd_count == 1 && commands[0] && commands[0]->type == CMD)
 	{
 		exit_status = execute_single_command(mini, commands, cmd_count);
