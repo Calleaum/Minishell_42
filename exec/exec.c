@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 18:09:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/17 18:04:47 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/19 17:53:30 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,5 +144,6 @@ int	execute_pipeline(t_mini *mini, t_node *tokens)
 		close(pipe_fds[(cmd_count - 2) % 2][1]);
 	}
 	exit_status = wait_for_children(cmd_count, mini);
+	cleanup_heredoc_files(commands, cmd_count);
 	return (free_all(commands, NULL, cmd_count), exit_status);
 }

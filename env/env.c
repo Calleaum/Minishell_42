@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 09:54:45 by calleaum          #+#    #+#             */
-/*   Updated: 2025/04/15 13:49:13 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/18 11:34:35 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ t_env	*init_env(char **envp)
 			return (free_env(env), NULL);
 		i++;
 	}
+	env->last_exit_status = 0;
 	env->env_vars[i] = NULL;
 	env->tokens = NULL;
 	return (env);
