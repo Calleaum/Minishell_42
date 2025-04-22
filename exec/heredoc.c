@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 17:34:57 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/19 17:49:44 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/22 12:37:10 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,14 +66,12 @@ static char	*create_heredoc_file(char *delimiter, t_mini *mini)
 			free(filename);
 			return (NULL);
 		}
-
 		line = readline("> ");
 		if (!line)
 		{
 			fd_printf(2, "minishell: warning: here-document delimited by end-of-file\n");
 			break;
 		}
-		
 		if (process_line(line, delimiter, fd, mini))
 			break;
 	}

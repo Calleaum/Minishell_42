@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 18:09:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/19 17:53:30 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/22 13:50:16 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ static int	execute_single_command(t_mini *mini, t_node **cmd, int cmd_count)
 	stdout_copy = dup(STDOUT_FILENO);
 	if (apply_redirections(cmd[0]) != 0)
 		return (dup2(stdin_copy, STDIN_FILENO), dup2(stdin_copy, STDOUT_FILENO),
-			close(stdin_copy), close(stdout_copy), 1);
+			close(stdin_copy), close(stdout_copy),
+			free_all(cmd, NULL, cmd_count), 1);
 	if (!ft_strcmp(cmd[0]->data, "exit"))
 	{
 		close(stdin_copy);
@@ -48,7 +49,7 @@ static int	execute_child_command(t_mini *mini, t_node **commands,
 	char	**args;
 
 	if (apply_redirections(commands[i]) != 0)
-		return (1);
+		return (free_all(commands, NULL, cmd_count), free_env(mini->env), 1);
 	if (commands[i] && commands[i]->type == CMD)
 	{
 		token = extract_command_token(commands[i]);
