@@ -3,16 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/18 11:38:56 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/22 15:08:46 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 pid_t	g_signal = 0;
+
+void	sigcat(t_mini *mini)
+{
+	if (g_signal == 131 || g_signal == 132)
+		{
+			mini->last_exit_status = 130;
+			if (g_signal == 131)
+			{
+				printf("Quit (core dumped)\n");
+				mini->last_exit_status = 131;
+			}
+			else
+				write(STDOUT_FILENO, "\n", 1);
+			g_signal = 130;
+		}
+}
 
 static int	execute_command(t_mini *mini)
 {
@@ -59,15 +75,9 @@ int	main(int ac, char **av, char **env)
 			return (write(2, "exit\n", 5), free_env(mini.env), 0);
 		if (empty_line(mini.str))
 			continue ;
-		execute_command(&mini);
-		if (g_signal == 131 || g_signal == 132)
-		{
+		if (g_signal == 130)
 			mini.last_exit_status = 130;
-			if (g_signal == 131)
-				write(STDOUT_FILENO, "\n", 1);
-			else
-				printf("Quit (core dumped)\n");
-			g_signal = 130;
-		}
+		execute_command(&mini);
+		sigcat(&mini);
 	}
 }

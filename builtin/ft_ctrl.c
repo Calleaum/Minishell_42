@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 09:34:05 by calleaum          #+#    #+#             */
-/*   Updated: 2025/04/17 17:17:34 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/22 15:03:59 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,13 @@ static void	sig_handler_heredoc(int signal)
 
 static void	sig_handler_catas(int signal)
 {
+	if (signal == SIGQUIT)
+		g_signal = 131;
 	if (signal == SIGINT)
 	{
-		g_signal = 131;
+		g_signal = 132;
 		rl_replace_line("", 0);
 	}
-	if (signal == SIGQUIT)
-		g_signal = 132;
 }
 
 void	set_sig_interactive(int i)
