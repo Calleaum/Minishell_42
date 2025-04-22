@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 17:34:57 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/22 12:37:10 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/22 18:35:32 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static int	process_line(char *line, char *delimiter, int pipe_fd, t_mini *mini)
 	return (0);
 }
 
-static char	*create_heredoc_file(char *delimiter, t_mini *mini)
+static char	*create_heredoc_file(char *delimiter, t_mini *mini, t_node **cmd, char	**filenames)
 {
 	int			fd;
 	char		*filename;
@@ -58,22 +58,42 @@ static char	*create_heredoc_file(char *delimiter, t_mini *mini)
 		free(filename);
 		return (NULL);
 	}
-	while (1)
+	pid_t pid = fork();
+	if (pid == 0)
 	{
-		if (g_signal == 130)
+		signal(SIGINT, sig_handler_heredoc);
+		while (1)
 		{
-			close(fd);
-			free(filename);
-			return (NULL);
+			line = readline("> ");
+			if (g_signal == 130)
+				break;
+			if (!line)
+			{
+				fd_printf(2, "minishell: warning: here-document delimited by end-of-file\n");
+				break;
+			}
+			if (process_line(line, delimiter, fd, mini))
+				break;
 		}
-		line = readline("> ");
-		if (!line)
+		close(fd);
+		while (--mini->l >= 0)
+			free(filenames[mini->l]);
+		free(filenames);
+		free(filename);
+		free_env(mini->env);
+		free_all(cmd, NULL, mini->cmd_count);
+		exit(0);
+	}
+	else
+	{
+		int status;
+		waitpid(pid, &status, 0);
+		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 		{
-			fd_printf(2, "minishell: warning: here-document delimited by end-of-file\n");
-			break;
+			g_signal = 130;
+			mini->last_exit_status = 130;
+			return (NULL); // heredoc was canceled
 		}
-		if (process_line(line, delimiter, fd, mini))
-			break;
 	}
 	close(fd);
 	return (filename);  // Retourne le nom du fichier au lieu du descripteur
@@ -84,14 +104,13 @@ static char	*create_heredoc_file(char *delimiter, t_mini *mini)
 ** Uses a simple linear traversal to find and process each heredoc
 ** as they appear in the token list
 */
-int	process_heredocs_for_command(t_node *tokens, t_mini *mini)
+int	process_heredocs_for_command(t_node *tokens, t_mini *mini, t_node **cmd)
 {
 	t_node	*current;
 	t_node	*next;
 	char	*filename;
 	char	**filenames;
 	int		count;
-	int		i;
 
 	count = 0;
 	current = tokens;
@@ -106,26 +125,26 @@ int	process_heredocs_for_command(t_node *tokens, t_mini *mini)
 	filenames = malloc(sizeof(char *) * count);
 	if (!filenames)
 		return (1);
-	i = 0;
+	mini->l = 0;
 	current = tokens;
-	while (current && i < count)
+	while (current && mini->l < count)
 	{
 		if (current->type == HD && current->next)
 		{
 			next = current->next;
-			filename = create_heredoc_file(next->data, mini);
+			filename = create_heredoc_file(next->data, mini, cmd, filenames);
 			if (!filename)
 			{
-				while (--i >= 0)
-					free(filenames[i]);
+				while (--mini->l >= 0)
+					free(filenames[mini->l]);
 				free(filenames);
 				return (1);
 			}
-			filenames[i++] = filename;
+			filenames[mini->l++] = filename;
 		}
 		current = current->next;
 	}
-	i = 0;
+	mini->l = 0;
 	current = tokens;
 	while (current)
 	{
@@ -136,7 +155,7 @@ int	process_heredocs_for_command(t_node *tokens, t_mini *mini)
 			current->data = ft_strdup("<");
 			current->type = IF;
 			free(next->data);
-			next->data = filenames[i++];
+			next->data = filenames[mini->l++];
 		}
 		current = current->next;
 	}
@@ -144,16 +163,16 @@ int	process_heredocs_for_command(t_node *tokens, t_mini *mini)
 	return (0);
 }
 
-int	prepare_heredocs(t_node **commands, int cmd_count, t_mini *mini)
+int	prepare_heredocs(t_node **commands, t_mini *mini)
 {
 	int	i;
 	int	result;
 
-	for (i = 0; i < cmd_count; i++)
+	for (i = 0; i < mini->cmd_count; i++)
 	{
 		if (!commands[i])
 			continue;
-		result = process_heredocs_for_command(commands[i], mini);
+		result = process_heredocs_for_command(commands[i], mini, commands);
 		if (result != 0)
 			return (1);
 	}

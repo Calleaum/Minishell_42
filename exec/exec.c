@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 18:09:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/22 15:12:02 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/22 18:18:32 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,29 +119,28 @@ static int	wait_for_children(int cmd_count, t_mini *mini)
 
 int	execute_pipeline(t_mini *mini, t_node *tokens)
 {
-	int		cmd_count;
 	t_node	**commands;
 	int		pipe_fds[2][2];
 	int		exit_status;
 
-	commands = split_commands(tokens, &cmd_count);
+	commands = split_commands(tokens, mini);
 	free_list(tokens);
 	if (!commands)
-		return (1);
-	if (prepare_heredocs(commands, cmd_count, mini) != 0)
-		return (free_all(commands, NULL, cmd_count), 1);
-	if (cmd_count == 1 && commands[0] && commands[0]->type == CMD)
-		return (execute_single_command(mini, commands, cmd_count));
+		return (free_all(commands, NULL, mini->cmd_count), 1);
+	if (prepare_heredocs(commands, mini) != 0)
+		return (free_all(commands, NULL, mini->cmd_count), 1);
+	if (mini->cmd_count == 1 && commands[0] && commands[0]->type == CMD)
+		return (execute_single_command(mini, commands, mini->cmd_count));
 	mini->j = -1;
-	while (++mini->j < cmd_count)
-		if (fork_and_execute(mini, commands, cmd_count, pipe_fds) != 0)
+	while (++mini->j < mini->cmd_count)
+		if (fork_and_execute(mini, commands, mini->cmd_count, pipe_fds) != 0)
 			return (1);
-	if (cmd_count > 1)
+	if (mini->cmd_count > 1)
 	{
-		close(pipe_fds[(cmd_count - 2) % 2][0]);
-		close(pipe_fds[(cmd_count - 2) % 2][1]);
+		close(pipe_fds[(mini->cmd_count - 2) % 2][0]);
+		close(pipe_fds[(mini->cmd_count - 2) % 2][1]);
 	}
-	exit_status = wait_for_children(cmd_count, mini);
-	cleanup_heredoc_files(commands, cmd_count);
-	return (free_all(commands, NULL, cmd_count), exit_status);
+	exit_status = wait_for_children(mini->cmd_count, mini);
+	cleanup_heredoc_files(commands, mini->cmd_count);
+	return (free_all(commands, NULL, mini->cmd_count), exit_status);
 }

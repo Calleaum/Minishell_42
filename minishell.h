@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/22 15:10:06 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/22 18:33:17 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ typedef struct s_mini
 	int		i;
 	int		j;
 	int		k;
+	int		l;
 	char	*current_token;
 	char	*quoted_part;
 	int		special;
@@ -110,7 +111,7 @@ extern pid_t	g_signal;
 # define MSGPIPE "minishell: syntax error near unexpected token `|'\n"
 
 void		cleanup_heredoc_files(t_node **commands, int cmd_count);
-int			prepare_heredocs(t_node **commands, int cmd_count, t_mini *mini);
+int			prepare_heredocs(t_node **commands, t_mini *mini);
 
 void		print_command_not_found(const char *cmd);
 int			handle_path_errors(char *cmd);
@@ -120,7 +121,7 @@ int			check_is_directory(char *path, char *cmd);
 
 t_node		**clean_commands(t_node **commands, int index);
 t_node		**allocate_commands(int count);
-t_node		**split_commands(t_node *tokens, int *cmd_count);
+t_node		**split_commands(t_node *tokens, t_mini *mini);
 int			apply_redirections(t_node *tokens);
 char		**extract_command_args(t_node *tokens);
 t_node		*extract_command_token(t_node *tokens);
@@ -157,6 +158,7 @@ void		display_tokens(t_node *head);
 
 // ctrl //
 void		set_sig_interactive(int i);
+void		sig_handler_heredoc(int signal);
 void		set_sig_executing(void);
 
 // echo //

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_commands.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 16:37:38 by calleaum          #+#    #+#             */
-/*   Updated: 2025/04/18 11:38:52 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/22 18:17:22 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ static int	extract_segments(t_node **commands, t_node *tokens)
 	return (-1);
 }
 
-t_node	**split_commands(t_node *tokens, int *cmd_count)
+t_node	**split_commands(t_node *tokens, t_mini *mini)
 {
 	t_node	**commands;
 	int		count;
@@ -97,6 +97,6 @@ t_node	**split_commands(t_node *tokens, int *cmd_count)
 	error_index = extract_segments(commands, tokens);
 	if (error_index != -1)
 		return (clean_commands(commands, error_index));
-	*cmd_count = count;
+	mini->cmd_count = count;
 	return (commands);
 }
