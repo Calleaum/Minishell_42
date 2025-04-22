@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/22 18:33:17 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/22 18:38:36 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,6 @@ void		display_tokens(t_node *head);
 // ctrl //
 void		set_sig_interactive(int i);
 void		sig_handler_heredoc(int signal);
-void		set_sig_executing(void);
 
 // echo //
 void		ft_echo(t_mini *mini, t_node *args);
