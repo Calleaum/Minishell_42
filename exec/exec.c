@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 18:09:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/22 13:50:16 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/22 15:12:02 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,10 +131,7 @@ int	execute_pipeline(t_mini *mini, t_node *tokens)
 	if (prepare_heredocs(commands, cmd_count, mini) != 0)
 		return (free_all(commands, NULL, cmd_count), 1);
 	if (cmd_count == 1 && commands[0] && commands[0]->type == CMD)
-	{
-		exit_status = execute_single_command(mini, commands, cmd_count);
-		return (exit_status);
-	}
+		return (execute_single_command(mini, commands, cmd_count));
 	mini->j = -1;
 	while (++mini->j < cmd_count)
 		if (fork_and_execute(mini, commands, cmd_count, pipe_fds) != 0)

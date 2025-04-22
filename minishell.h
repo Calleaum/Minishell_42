@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/19 17:03:17 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/22 15:10:06 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ extern pid_t	g_signal;
 # define MSGREDIR "minishell: syntax error near unexpected token `newline'\n"
 # define MSGPIPE "minishell: syntax error near unexpected token `|'\n"
 
-void	cleanup_heredoc_files(t_node **commands, int cmd_count);
+void		cleanup_heredoc_files(t_node **commands, int cmd_count);
 int			prepare_heredocs(t_node **commands, int cmd_count, t_mini *mini);
 
 void		print_command_not_found(const char *cmd);

@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/22 15:08:46 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/22 15:10:27 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,17 @@ pid_t	g_signal = 0;
 void	sigcat(t_mini *mini)
 {
 	if (g_signal == 131 || g_signal == 132)
+	{
+		mini->last_exit_status = 130;
+		if (g_signal == 131)
 		{
-			mini->last_exit_status = 130;
-			if (g_signal == 131)
-			{
-				printf("Quit (core dumped)\n");
-				mini->last_exit_status = 131;
-			}
-			else
-				write(STDOUT_FILENO, "\n", 1);
-			g_signal = 130;
+			printf("Quit (core dumped)\n");
+			mini->last_exit_status = 131;
 		}
+		else
+			write(STDOUT_FILENO, "\n", 1);
+		g_signal = 130;
+	}
 }
 
 static int	execute_command(t_mini *mini)
