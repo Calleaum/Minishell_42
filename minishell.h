@@ -6,7 +6,7 @@
 /*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:45:27 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/22 18:38:36 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/23 17:37:28 by lgrisel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,6 @@ typedef struct s_node
 	struct s_node	*next;
 	int				error;
 }	t_node;
-
-typedef struct s_cmd
-{
-	char	**args;
-	int		arg_count;
-	t_node	*start;
-	t_node	*end;
-}	t_cmd;
 
 typedef struct s_env_node
 {
@@ -75,6 +67,7 @@ typedef struct s_mini
 	int		*heredoc_counts;
 	int		heredoc_fd_count;
 	int		cmd_count;
+	int		count;
 	t_env	*env;
 }	t_mini;
 
@@ -110,6 +103,8 @@ extern pid_t	g_signal;
 # define MSGREDIR "minishell: syntax error near unexpected token `newline'\n"
 # define MSGPIPE "minishell: syntax error near unexpected token `|'\n"
 
+char		*create_heredoc_file(char *delimiter, t_mini *mini, t_node **cmd,
+				char **filenames);
 void		cleanup_heredoc_files(t_node **commands, int cmd_count);
 int			prepare_heredocs(t_node **commands, t_mini *mini);
 
@@ -135,6 +130,7 @@ void		setup_child_pipes(int i, int cmd_count, int pipe_fds[2][2]);
 int			execute_pipeline(t_mini *mini, t_node *tokens);
 
 // parsing //
+
 int			empty_line(char *line);
 int			is_unclosedquote(char *str);
 int			check_redir_syntax(t_node *list);
@@ -157,29 +153,36 @@ t_node		*tokenize_input(char *input, t_mini *n);
 void		display_tokens(t_node *head);
 
 // ctrl //
+
 void		set_sig_interactive(int i);
 void		sig_handler_heredoc(int signal);
 
 // echo //
+
 void		ft_echo(t_mini *mini, t_node *args);
 
 // cd //
+
 int			ft_cd(t_mini *mini, t_node *list);
 int			handle_cd_error(char *path);
 
 // exit //
+
 void		ft_exit(t_mini *mini, t_node *list);
 
 // pwd //
+
 int			ft_pwd(t_mini *mini);
 int			update_pwd(t_env *env);
 
 // unset //
+
 int			ft_unset(t_mini *mini, t_node *list);
 int			check_env_match(char *env_var, const char *var_name);
 int			check_token_match(char *token_data, const char *var_name);
 
 // env //
+
 int			ft_env(t_mini *mini, t_node *args);
 char		*expand_variables(char *str, int last_exit_status, t_env *env,
 				int hd);
@@ -194,12 +197,14 @@ int			set_env_value(t_env *env, const char *name, const char *value);
 size_t		handle_dollar(char *str, int *i, int last_exit_status, t_env *env);
 
 // env utils //
+
 char		*ft_strjoin3(const char *s1, const char *s2, const char *s3);
 char		*ft_strcpy2(char *dest, const char *src);
 void		free_env(t_env *env);
 t_env		*init_env(char **envp);
 
 //export//
+
 int			ft_export(t_mini *mini, t_node *list);
 int			add_env_var_no_value(t_env *env, const char *name);
 char		*str_n_copy(char *dest, const char *src, int n);
@@ -213,6 +218,7 @@ void		free_env_list(t_env_node *head);
 t_env_node	*build_sorted_env_list(t_env *env);
 
 // utils //
+
 void		init_mini(t_mini *mini, char **envp);
 int			ft_varlen(char *str);
 int			ft_isspace(char c);
