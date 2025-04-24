@@ -6,7 +6,7 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 10:32:40 by calleaum          #+#    #+#             */
-/*   Updated: 2025/03/31 14:58:28 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/24 11:54:05 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	create_new_var(char **new_var, char *arg, int name_len, char *equals)
 	return (1);
 }
 
-int	init_export_var(char *arg, char *var_name, int *name_len)
+int	init_export_var(char *arg, char *var_name, int *name_len, t_mini *mini)
 {
 	char		*equals;
 	int			var_name_size;
@@ -42,7 +42,7 @@ int	init_export_var(char *arg, char *var_name, int *name_len)
 	if (!validate_var_name(arg, *name_len))
 	{
 		fd_printf(2, "export: '%s': not a valid identifier\n", arg);
-		return (0);
+		return (mini->last_exit_status = 1, 1);
 	}
 	str_n_copy(var_name, arg, *name_len);
 	var_name[*name_len] = '\0';
@@ -56,8 +56,8 @@ int	handle_export_arg(t_mini *mini, char *arg)
 	char	*new_var;
 	int		name_len;
 
-	if (!init_export_var(arg, var_name, &name_len))
-		return (mini->last_exit_status = 1, 0);
+	if (!init_export_var(arg, var_name, &name_len, mini))
+		return (mini->last_exit_status = 127, 0);
 	equals = ft_strchr(arg, '=');
 	if (equals == NULL)
 	{

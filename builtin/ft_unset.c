@@ -6,13 +6,12 @@
 /*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 14:44:20 by calleaum          #+#    #+#             */
-/*   Updated: 2025/03/25 09:06:38 by calleaum         ###   ########.fr       */
+/*   Updated: 2025/04/24 14:00:19 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-/* Suppression d'une variable d'environnement */
 static int	remove_env_var(t_env *env, const char *var_name)
 {
 	size_t	i;
@@ -35,7 +34,6 @@ static int	remove_env_var(t_env *env, const char *var_name)
 	return (0);
 }
 
-/* Suppression d'une variable des tokens */
 static int	remove_env_var_from_tokens(t_node **head, const char *var_name)
 {
 	t_node	*current;
@@ -58,40 +56,13 @@ static int	remove_env_var_from_tokens(t_node **head, const char *var_name)
 	return (0);
 }
 
-/* Validation de l'identifiant de variable */
-static int	is_valid_identifier(const char *name)
-{
-	int	i;
-
-	if (!name || !*name)
-		return (0);
-	if (!ft_isalpha(name[0]) && name[0] != '_')
-		return (0);
-	i = 1;
-	while (name[i])
-	{
-		if (!ft_isalnum(name[i]) && name[i] != '_')
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
 static int	handle_unset_arg(t_env *env, char *arg)
 {
-	if (!is_valid_identifier(arg))
-	{
-		ft_putstr_fd("unset: `", 2);
-		ft_putstr_fd(arg, 2);
-		ft_putstr_fd("': not a valid identifier\n", 2);
-		return (0);
-	}
 	remove_env_var(env, arg);
 	remove_env_var_from_tokens(&env->tokens, arg);
 	return (1);
 }
 
-/* Fonction principale pour unset */
 int	ft_unset(t_mini *mini, t_node *list)
 {
 	t_node	*current;

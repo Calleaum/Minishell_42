@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   list_utils3.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 15:59:58 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/15 17:58:28 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/24 10:57:01 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,7 @@ int	check_redir_syntax(t_node *list)
 			|| temp->type == OT || temp->type == OA)
 		{
 			if (temp->next->type == IF || temp->next->type == HD
-				|| temp->next->type == OT
-				|| temp->next->type == OA)
+				|| temp->next->type == OT || temp->next->type == OA)
 				return (fd_printf(2
 						, "minishell: syntax error near unexpected token `%s'\n"
 						, temp->next->data), 1);

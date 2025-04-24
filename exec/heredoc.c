@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 17:34:57 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/23 17:33:50 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/24 14:25:59 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ int	process_heredocs_for_command(t_node *tokens, t_mini *mini, t_node **cmd)
 	return (free(filenames), 0);
 }
 
+// 🖕
 int	prepare_heredocs(t_node **commands, t_mini *mini)
 {
 	int	i;

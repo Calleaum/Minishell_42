@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 13:42:36 by lgrisel           #+#    #+#             */
-/*   Updated: 2025/04/23 17:34:43 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/24 14:02:48 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int	execute_command(t_mini *mini)
 
 	add_history(mini->str);
 	if (is_unclosedquote(mini->str))
-		return (free(mini->str), 0);
+		return (free(mini->str), mini->last_exit_status = 1, 0);
 	mini->exp = expand_variables(mini->str, mini->last_exit_status, mini->env,
 			0);
 	free(mini->str);
@@ -50,7 +50,7 @@ static int	execute_command(t_mini *mini)
 		return (free_list(list), 0);
 	}
 	if (check_pipe_syntax(list) || check_redir_syntax(list))
-		return (free_list(list), 0);
+		return (free_list(list), mini->last_exit_status = 2, 2);
 	if (has_heredoc(list))
 		set_sig_interactive(1);
 	if (has_heredoc(list) == 2)

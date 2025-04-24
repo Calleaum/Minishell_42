@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 09:54:45 by calleaum          #+#    #+#             */
-/*   Updated: 2025/04/22 15:01:47 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/24 14:01:14 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ t_env	*init_env(char **envp)
 	return (env);
 }
 
-// Fonction pour obtenir la valeur d'une variable d'environnement
 char	*get_env_value(t_env *env, const char *name)
 {
 	int		i;
@@ -66,7 +65,6 @@ char	*get_env_value(t_env *env, const char *name)
 	return (NULL);
 }
 
-// Fonction pour mettre à jour une variable d'environnement
 int	set_env_value(t_env *env, const char *name, const char *value)
 {
 	int		i;

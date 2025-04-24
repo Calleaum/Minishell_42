@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgrisel <lgrisel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: calleaum <calleaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:16:06 by calleaum          #+#    #+#             */
-/*   Updated: 2025/04/15 12:45:41 by lgrisel          ###   ########.fr       */
+/*   Updated: 2025/04/24 14:01:13 by calleaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ char	*expand_exit_status(t_expand *exp, int last_exit_status)
 	return (exp->expanded);
 }
 
-// Fonction modifiée calculate_expanded_size
 size_t	calc_exp_siz(char *str, int last_exit_status, t_env *env)
 {
 	size_t	size;
